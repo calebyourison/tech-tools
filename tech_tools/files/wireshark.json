@@ -1,0 +1,117 @@
+[{
+    "_index": "packets-2024-11-17",
+    "_type": "doc",
+    "_score": null,
+    "_source": {
+      "layers": {
+        "frame": {
+          "frame.section_number": "1",
+          "frame.interface_id": "0",
+          "frame.interface_id_tree": {
+            "frame.interface_name": "enp9f6"
+          },
+          "frame.encap_type": "1",
+          "frame.time": "Nov 17, 2024 22:15:49.717029906 UTC",
+          "frame.time_utc": "Nov 17, 2024 22:15:49.717029906 UTC",
+          "frame.time_epoch": "1731881749.717029906",
+          "frame.offset_shift": "0.000000000",
+          "frame.time_delta": "0.354460768",
+          "frame.time_delta_displayed": "0.354460768",
+          "frame.time_relative": "68.090748228",
+          "frame.number": "110",
+          "frame.len": "60",
+          "frame.cap_len": "60",
+          "frame.marked": "0",
+          "frame.ignored": "0",
+          "frame.protocols": "eth:ethertype:ip:igmp:igmp",
+          "frame.coloring_rule.name": "Routing",
+          "frame.coloring_rule.string": "hsrp || eigrp || ospf || bgp || cdp || vrrp || carp || gvrp || igmp || ismp"
+        },
+        "eth": {
+          "eth.dst": "01:00:5e:7f:ff:fa",
+          "eth.dst_tree": {
+            "eth.dst_resolved": "IPv4mcast_7f:ff:fa",
+            "eth.dst.oui": "65630",
+            "eth.dst.oui_resolved": "ICANN, IANA Department",
+            "eth.addr": "01:00:5e:7f:ff:fa",
+            "eth.addr_resolved": "IPv4mcast_7f:ff:fa",
+            "eth.addr.oui": "65630",
+            "eth.addr.oui_resolved": "ICANN, IANA Department",
+            "eth.dst.lg": "0",
+            "eth.lg": "0",
+            "eth.dst.ig": "1",
+            "eth.ig": "1"
+          },
+          "eth.src": "00:d8:61:37:59:33",
+          "eth.src_tree": {
+            "eth.src_resolved": "MicroStarINT_37:59:93",
+            "eth.src.oui": "55393",
+            "eth.src.oui_resolved": "Micro-Star INTL CO., LTD.",
+            "eth.addr": "00:d8:61:37:59:33",
+            "eth.addr_resolved": "MicroStarINT_37:59:33",
+            "eth.addr.oui": "55393",
+            "eth.addr.oui_resolved": "Micro-Star INTL CO., LTD.",
+            "eth.src.lg": "0",
+            "eth.lg": "0",
+            "eth.src.ig": "0",
+            "eth.ig": "0"
+          },
+          "eth.type": "0x0800",
+          "eth.padding": "00:00:00:00:00:00:00:00:00:00:00:00:00:00"
+        },
+        "ip": {
+          "ip.version": "4",
+          "ip.hdr_len": "24",
+          "ip.dsfield": "0xc0",
+          "ip.dsfield_tree": {
+            "ip.dsfield.dscp": "48",
+            "ip.dsfield.ecn": "0"
+          },
+          "ip.len": "32",
+          "ip.id": "0x0000",
+          "ip.flags": "0x02",
+          "ip.flags_tree": {
+            "ip.flags.rb": "0",
+            "ip.flags.df": "1",
+            "ip.flags.mf": "0"
+          },
+          "ip.frag_offset": "0",
+          "ip.ttl": "1",
+          "ip.proto": "2",
+          "ip.checksum": "0x3310",
+          "ip.checksum.status": "2",
+          "ip.src": "10.172.1.13",
+          "ip.addr": "10.172.1.13",
+          "ip.src_host": "10.172.1.13",
+          "ip.host": "10.172.1.13",
+          "ip.dst": "239.255.255.250",
+          "ip.addr": "239.255.255.250",
+          "ip.dst_host": "239.255.255.250",
+          "ip.host": "239.255.255.250",
+          "Options: (4 bytes), Router Alert": {
+            "ip.options.routeralert": "94:04:00:00",
+            "ip.options.routeralert_tree": {
+              "ip.opt.type": "148",
+              "ip.opt.type_tree": {
+                "ip.opt.type.copy": "1",
+                "ip.opt.type.class": "0",
+                "ip.opt.type.number": "20"
+              },
+              "ip.opt.len": "4",
+              "ip.opt.ra": "0"
+            }
+          }
+        },
+        "igmp": {
+          "igmp.version": "2",
+          "igmp.type": "0x16",
+          "igmp.max_resp": "0",
+          "igmp.checksum": "0xfa04",
+          "igmp.checksum.status": "1",
+          "igmp.maddr": "239.255.255.250"
+        }
+      }
+    }
+  }
+  
+  ]

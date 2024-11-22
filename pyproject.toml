@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools >= 61.0", "setuptools_scm>=8"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.package-data]
+mypkg = ["*.txt", "*.json"]
+
+[project]
+name = "tech-tools"
+version = "0.1"
+dependencies = [
+    "pandas>=2.0.0",
+    "numpy>=2.0.0",
+]
+
+requires-python = ">=3.8"
+authors = [
+  {name = "Caleb Yourison", email = "caleb.yourison@gmail.com"},
+]
+description = "Basic Local Network Tools for Technicians"
+readme = "README.md"
+license = {file = "LICENSE"}
+keywords = ['networking', 'technician', 'cctv']
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Programming Language :: Python :: 3"
+]
