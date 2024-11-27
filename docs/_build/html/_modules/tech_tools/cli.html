@@ -1,0 +1,436 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tech_tools.cli &mdash; tech-tools 0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=10f1778b"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            tech-tools
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Technician Tools</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">tech-tools</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">tech_tools.cli</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tech_tools.cli</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">platform</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">from</span> <span class="nn">ipaddress</span> <span class="kn">import</span> <span class="n">IPv4Address</span><span class="p">,</span> <span class="n">AddressValueError</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+
+<span class="c1"># IPCONFIG</span>
+<div class="viewcode-block" id="ipconfig">
+<a class="viewcode-back" href="../../tech_tools.html#tech_tools.cli.ipconfig">[docs]</a>
+<span class="k">def</span> <span class="nf">ipconfig</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return string of raw ip configuration info from CLI.</span>
+
+<span class="sd">    :return: Printout of ipconifg /all on Windows or nmcli device show on linux</span>
+<span class="sd">    :rtype: str</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        Use of this function on Linux requires that nmcli be installed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">operating_system</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="c1"># Defaults to windows command</span>
+    <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ipconfig&quot;</span><span class="p">,</span> <span class="s2">&quot;/all&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">operating_system</span> <span class="o">==</span> <span class="s2">&quot;linux&quot;</span><span class="p">:</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;nmcli&quot;</span><span class="p">,</span> <span class="s2">&quot;device&quot;</span><span class="p">,</span> <span class="s2">&quot;show&quot;</span><span class="p">]</span>
+    <span class="n">raw_ipconfig</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ipconfig_output</span> <span class="o">=</span> <span class="n">raw_ipconfig</span><span class="o">.</span><span class="n">stdout</span>
+
+    <span class="k">return</span> <span class="n">ipconfig_output</span></div>
+
+
+
+<div class="viewcode-block" id="parse_ipconfig">
+<a class="viewcode-back" href="../../tech_tools.html#tech_tools.cli.parse_ipconfig">[docs]</a>
+<span class="k">def</span> <span class="nf">parse_ipconfig</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse raw ipconfig information and return a list containing a dictionary for each valid interface.</span>
+
+<span class="sd">    :return: List of dictionaries with keys: ip, subnet, mac, (gateway if present)</span>
+<span class="sd">    :rtype: list</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        Subnet will be provided as a mask on Windows (ex 255.255.255.0) and using CIDR notation on Linux (ex /24).</span>
+
+<span class="sd">        Valid interfaces might not have a defined gateway.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">operating_system</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">raw_output</span> <span class="o">=</span> <span class="n">ipconfig</span><span class="p">()</span>
+    <span class="n">found_interfaces</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># Split by blank lines</span>
+    <span class="n">interfaces</span> <span class="o">=</span> <span class="n">raw_output</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">operating_system</span> <span class="o">==</span> <span class="s2">&quot;linux&quot;</span><span class="p">:</span>
+        <span class="n">items_of_interest</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;GENERAL.HWADDR&quot;</span><span class="p">:</span> <span class="s2">&quot;mac&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;IP4.ADDRESS[1]&quot;</span><span class="p">:</span> <span class="s2">&quot;cidr_notation&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;IP4.GATEWAY&quot;</span><span class="p">:</span> <span class="s2">&quot;gateway&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="n">interface</span> <span class="ow">in</span> <span class="n">interfaces</span><span class="p">:</span>
+            <span class="n">interface_dict</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">interface</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+            <span class="c1"># Replace &#39;: &#39; with an asterisk as it makes splitting easier in following step, remove whitespace</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;: &quot;</span><span class="p">,</span> <span class="s2">&quot;*&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">]</span>
+            <span class="c1"># Create two pieces</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+                <span class="c1"># If first piece is a key in items_of_interest</span>
+                <span class="k">if</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">items_of_interest</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="c1"># AND second piece isn&#39;t a blank value</span>
+                    <span class="k">if</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;--&quot;</span><span class="p">:</span>
+                        <span class="c1"># Use its accompanying value in items_of_interest as its new key, second piece is its value</span>
+                        <span class="n">interface_dict</span><span class="p">[</span><span class="n">items_of_interest</span><span class="p">[</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]]]</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">found_interfaces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">interface_dict</span><span class="p">)</span>
+
+        <span class="c1"># Only interfaces with a valid cidr_notation value are desired</span>
+        <span class="n">found_interfaces</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">interface</span>
+            <span class="k">for</span> <span class="n">interface</span> <span class="ow">in</span> <span class="n">found_interfaces</span>
+            <span class="k">if</span> <span class="s2">&quot;cidr_notation&quot;</span> <span class="ow">in</span> <span class="n">interface</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="p">]</span>
+        <span class="k">for</span> <span class="n">interface</span> <span class="ow">in</span> <span class="n">found_interfaces</span><span class="p">:</span>
+            <span class="c1"># Split cidr_notation value into an ip address and a subnet value, remove original cidr_notation pair</span>
+            <span class="n">cidr_notation</span> <span class="o">=</span> <span class="n">interface</span><span class="p">[</span><span class="s2">&quot;cidr_notation&quot;</span><span class="p">]</span>
+            <span class="n">splits</span> <span class="o">=</span> <span class="n">cidr_notation</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+            <span class="n">interface</span><span class="p">[</span><span class="s2">&quot;ip&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">splits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">interface</span><span class="p">[</span><span class="s2">&quot;subnet&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">splits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">del</span> <span class="n">interface</span><span class="p">[</span><span class="s2">&quot;cidr_notation&quot;</span><span class="p">]</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">items_of_interest</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Physical Address&quot;</span><span class="p">:</span> <span class="s2">&quot;mac&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;IPv4 Address&quot;</span><span class="p">:</span> <span class="s2">&quot;ip&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Subnet Mask&quot;</span><span class="p">:</span> <span class="s2">&quot;subnet&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Default Gateway&quot;</span><span class="p">:</span> <span class="s2">&quot;gateway&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="c1"># Keep lines with IPv4 Address included</span>
+        <span class="n">valid_interfaces</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">interface</span> <span class="k">for</span> <span class="n">interface</span> <span class="ow">in</span> <span class="n">interfaces</span> <span class="k">if</span> <span class="s2">&quot;IPv4&quot;</span> <span class="ow">in</span> <span class="n">interface</span>
+        <span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">interface</span> <span class="ow">in</span> <span class="n">valid_interfaces</span><span class="p">:</span>
+            <span class="n">interface_dict</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">interface</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+            <span class="c1"># Remove white space to simplify upcoming sections</span>
+            <span class="n">stripped_lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">stripped_lines</span><span class="p">:</span>
+                <span class="c1"># Create two pieces to work with</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+                <span class="c1"># Replace various undesirable text using multiple steps</span>
+                <span class="n">new_line</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+                <span class="n">new_line</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">item</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;(Preferred)&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">new_line</span>
+                <span class="p">]</span>
+                <span class="c1"># Check if the first piece is a key in items_of_interest</span>
+                <span class="k">if</span> <span class="n">new_line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">items_of_interest</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="c1"># Use its accompanying value in items_of_interest as its new key, second piece is its value</span>
+                    <span class="n">interface_dict</span><span class="p">[</span><span class="n">items_of_interest</span><span class="p">[</span><span class="n">new_line</span><span class="p">[</span><span class="mi">0</span><span class="p">]]]</span> <span class="o">=</span> <span class="n">new_line</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="n">found_interfaces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">interface_dict</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">found_interfaces</span></div>
+
+
+
+<span class="c1"># ARP</span>
+<div class="viewcode-block" id="local_arp">
+<a class="viewcode-back" href="../../tech_tools.html#tech_tools.cli.local_arp">[docs]</a>
+<span class="k">def</span> <span class="nf">local_arp</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return string of raw ip configuration info from CLI.</span>
+
+<span class="sd">    :return: Printout of the local arp table</span>
+<span class="sd">    :rtype: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">operating_system</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="c1"># Defaults to windows command</span>
+    <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;arp&quot;</span><span class="p">,</span> <span class="s2">&quot;-a&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">operating_system</span> <span class="o">==</span> <span class="s2">&quot;linux&quot;</span><span class="p">:</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;arp&quot;</span><span class="p">,</span> <span class="s2">&quot;-n&quot;</span><span class="p">]</span>
+    <span class="n">raw_arp</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">arp_output</span> <span class="o">=</span> <span class="n">raw_arp</span><span class="o">.</span><span class="n">stdout</span>
+
+    <span class="k">return</span> <span class="n">arp_output</span></div>
+
+
+
+<div class="viewcode-block" id="parse_local_arp">
+<a class="viewcode-back" href="../../tech_tools.html#tech_tools.cli.parse_local_arp">[docs]</a>
+<span class="k">def</span> <span class="nf">parse_local_arp</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse raw local arp data and return a Pandas DataFrame.</span>
+
+<span class="sd">    :return: Parsed information from the local arp table, IPv4 Address and Mac Address</span>
+<span class="sd">    :rtype: Pandas.DataFrame</span>
+<span class="sd">        columns: ip, mac</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">operating_system</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="n">raw_arp_string</span> <span class="o">=</span> <span class="n">local_arp</span><span class="p">()</span>
+    <span class="n">arp_info</span> <span class="o">=</span> <span class="n">raw_arp_string</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+
+    <span class="c1"># Remove line(s) that contain header information</span>
+    <span class="n">arp_info</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">arp_info</span>
+        <span class="k">if</span> <span class="s2">&quot;Address&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">line</span>
+        <span class="k">if</span> <span class="s2">&quot;Interface&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">line</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>
+    <span class="p">]</span>
+    <span class="c1"># On windows, the first two items in each list are ip, mac</span>
+    <span class="n">selected_items</span> <span class="o">=</span> <span class="p">[[</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">arp_info</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">operating_system</span> <span class="o">==</span> <span class="s2">&quot;linux&quot;</span><span class="p">:</span>
+        <span class="c1"># On linux, the first and third items are ip, mac</span>
+        <span class="n">selected_items</span> <span class="o">=</span> <span class="p">[[</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">arp_info</span><span class="p">]</span>
+
+    <span class="n">arp_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">selected_items</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ip&quot;</span><span class="p">,</span> <span class="s2">&quot;mac&quot;</span><span class="p">])</span>
+    <span class="c1"># Convert MAC information to upper case for later comparison to manufacture database.</span>
+    <span class="n">arp_df</span><span class="p">[</span><span class="s2">&quot;mac&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">arp_df</span><span class="p">[</span><span class="s2">&quot;mac&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="c1"># Replace - with :</span>
+    <span class="n">arp_df</span><span class="p">[</span><span class="s2">&quot;mac&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">arp_df</span><span class="p">[</span><span class="s2">&quot;mac&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">)</span>
+    <span class="c1"># Covert strings to IPv4 Address objects</span>
+    <span class="n">arp_df</span><span class="p">[</span><span class="s2">&quot;ip&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">arp_df</span><span class="p">[</span><span class="s2">&quot;ip&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">IPv4Address</span><span class="p">(</span><span class="n">row</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">arp_df</span></div>
+
+
+
+<span class="c1"># Ping</span>
+<div class="viewcode-block" id="ping_single_ip">
+<a class="viewcode-back" href="../../tech_tools.html#tech_tools.cli.ping_single_ip">[docs]</a>
+<span class="k">def</span> <span class="nf">ping_single_ip</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Ping a single host and append to output list if successful.</span>
+
+<span class="sd">    :param ip: A valid IPv4 Address, example &quot;10.10.10.132&quot;</span>
+<span class="sd">    :type ip: str, IPv4Address</span>
+<span class="sd">    :param output: List to update with values</span>
+<span class="sd">    :type output: list</span>
+
+<span class="sd">    :return: Nothing, external list will be updated</span>
+<span class="sd">    :rtype: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">operating_system</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="c1"># Convert to string if not already</span>
+    <span class="n">ip</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span>
+    <span class="c1"># Default to windows command</span>
+    <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ping&quot;</span><span class="p">,</span> <span class="n">ip</span><span class="p">]</span>
+
+    <span class="c1"># Note the linux ping command requires additional flag to prevent an unending process</span>
+    <span class="k">if</span> <span class="n">operating_system</span> <span class="o">==</span> <span class="s2">&quot;linux&quot;</span><span class="p">:</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ping&quot;</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="s2">&quot;-c&quot;</span><span class="p">,</span> <span class="s2">&quot;4&quot;</span><span class="p">]</span>
+
+    <span class="n">ping</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Note that windows has TTL uppercase</span>
+    <span class="k">if</span> <span class="s2">&quot;ttl&quot;</span> <span class="ow">in</span> <span class="n">ping</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">IPv4Address</span><span class="p">(</span><span class="n">ip</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="ping_range_ip">
+<a class="viewcode-back" href="../../tech_tools.html#tech_tools.cli.ping_range_ip">[docs]</a>
+<span class="k">def</span> <span class="nf">ping_range_ip</span><span class="p">(</span><span class="n">ip_list</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Ping a list of hosts and return list of hosts that produced a valid response.</span>
+
+<span class="sd">    :param ip_list: Containing either str or IPv4Address objects of hosts</span>
+<span class="sd">    :type ip_list: list</span>
+
+<span class="sd">    :return: IPv4Address objects that responded to a ping</span>
+<span class="sd">    :rtype: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">threads_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Create separate thread for each host to expedite the process</span>
+    <span class="c1"># Most of the time in this function is consumed by waiting for a host response</span>
+    <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">ip_list</span><span class="p">:</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">ping_single_ip</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">output</span><span class="p">))</span>
+        <span class="n">threads_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">threads_list</span><span class="p">)):</span>
+        <span class="n">threads_list</span><span class="p">[</span><span class="n">number</span><span class="p">]</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">threads_list</span><span class="p">)):</span>
+        <span class="n">threads_list</span><span class="p">[</span><span class="n">number</span><span class="p">]</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+
+    <span class="c1"># Sort the output to keep addresses in a user-friendly order</span>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">output</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># Trace Route</span>
+<div class="viewcode-block" id="trace_route">
+<a class="viewcode-back" href="../../tech_tools.html#tech_tools.cli.trace_route">[docs]</a>
+<span class="k">def</span> <span class="nf">trace_route</span><span class="p">(</span><span class="n">destination</span><span class="o">=</span><span class="s2">&quot;8.8.8.8&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine route from local host to a given destination and return raw string data.</span>
+
+<span class="sd">    :param destination: (optional) Remote host, 8.8.8.8 by default</span>
+<span class="sd">    :type destination: str, IPv4Address</span>
+
+<span class="sd">    :return: Printout of tracert on Windows or traceroute on Linux</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        Use of this function on Linux requires that traceroute be installed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">operating_system</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="c1"># Convert destination to str if not already</span>
+    <span class="n">destination</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span>
+
+    <span class="c1"># Do not resolve hostnames, 100ms timeout to improve speed slightly</span>
+    <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;tracert&quot;</span><span class="p">,</span> <span class="s2">&quot;-d&quot;</span><span class="p">,</span> <span class="s2">&quot;-w&quot;</span><span class="p">,</span> <span class="s2">&quot;100&quot;</span><span class="p">,</span> <span class="n">destination</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">operating_system</span> <span class="o">==</span> <span class="s2">&quot;linux&quot;</span><span class="p">:</span>
+        <span class="c1"># Do not resolve hostnames, IP information is desirable</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;traceroute&quot;</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span> <span class="s2">&quot;-n&quot;</span><span class="p">]</span>
+
+    <span class="n">raw_trace</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">trace_output</span> <span class="o">=</span> <span class="n">raw_trace</span><span class="o">.</span><span class="n">stdout</span>
+
+    <span class="k">return</span> <span class="n">trace_output</span></div>
+
+
+
+<div class="viewcode-block" id="parse_trace_route_local">
+<a class="viewcode-back" href="../../tech_tools.html#tech_tools.cli.parse_trace_route_local">[docs]</a>
+<span class="k">def</span> <span class="nf">parse_trace_route_local</span><span class="p">(</span><span class="n">destination</span><span class="o">=</span><span class="s2">&quot;8.8.8.8&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse raw trace route data into a list of hosts considered to be part of local/private networks.</span>
+
+<span class="sd">    :param destination: (optional) Remote host, 8.8.8.8 by default</span>
+<span class="sd">    :type destination: str, IPv4Address</span>
+
+<span class="sd">    :return: Hosts (hops) along a given trace route with local (private) addresses</span>
+<span class="sd">    :rtype: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">operating_system</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="n">raw_trace_string</span> <span class="o">=</span> <span class="n">trace_route</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span>
+
+    <span class="c1"># Split by lines to dissect the information</span>
+    <span class="n">trace_info</span> <span class="o">=</span> <span class="n">raw_trace_string</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">operating_system</span> <span class="o">==</span> <span class="s2">&quot;linux&quot;</span><span class="p">:</span>
+        <span class="c1"># Remove line(s) that contain header information</span>
+        <span class="n">trace_info</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">trace_info</span>
+            <span class="k">if</span> <span class="s2">&quot;hops&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">line</span>
+            <span class="k">if</span> <span class="s2">&quot;route&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">line</span>
+        <span class="p">]</span>
+        <span class="c1"># On linux, the second item contains the IP address</span>
+        <span class="n">selected_items</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">trace_info</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Remove unwanted lines beginning and end lines have &#39;Trac&#39;, blank lines will be length of one</span>
+        <span class="n">trace_info</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">trace_info</span> <span class="k">if</span> <span class="s2">&quot;Trac&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">line</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>
+        <span class="p">]</span>
+        <span class="c1"># On windows, the final item will be the IP address</span>
+        <span class="n">selected_items</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">trace_info</span><span class="p">]</span>
+
+    <span class="n">private_ips</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">selected_items</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">ip_object</span> <span class="o">=</span> <span class="n">IPv4Address</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span>
+            <span class="c1"># Only local IP addresses are of interest</span>
+            <span class="k">if</span> <span class="n">ip_object</span><span class="o">.</span><span class="n">is_private</span><span class="p">:</span>
+                <span class="n">private_ips</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ip_object</span><span class="p">)</span>
+
+        <span class="c1"># Some hosts will return * or similar instead of valid response, except these</span>
+        <span class="k">except</span> <span class="n">AddressValueError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">private_ips</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Caleb Yourison.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

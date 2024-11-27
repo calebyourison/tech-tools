@@ -3,9 +3,12 @@
 `tech-tools` is geared towards the Low Voltage Security Industry, though its design is fairly general and could have other use cases.
 The basic goal is to gather information about local hosts for potential troubleshooting.  Currently, only IPv4 is supported.
 
-This projects makes use of the OS CLI and is currently supported on Linux and Windows.  Some parts of the code utilize route tracing.  This functionality is built into windows, though your version of Linux may not have it installed.  Refer to your distribution's documentation, though commonly it can be installed using:
+This projects makes use of the OS CLI and is currently supported on Linux and Windows.
+For Linux, some features may not be included by default.  This project requires the presence of `traceroute` and `network-manager`.
+Please refer to your distribution's documentation, though in many cases these packages can be installed using:
 ```bash
 sudo apt-get install traceroute
+sudo apt-get install network-manager
 ```
 
 **Do not use `tech-tools` (or other networking tools) unless on your own network or on a network in which you have been given permission to operate.**

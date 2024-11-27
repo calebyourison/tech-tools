@@ -1,0 +1,53 @@
+tech\_tools package
+===================
+
+Submodules
+----------
+
+tech\_tools.cli module
+----------------------
+
+.. automodule:: tech_tools.cli
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+tech\_tools.detective\_functions module
+---------------------------------------
+
+.. automodule:: tech_tools.detective_functions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+tech\_tools.resources module
+----------------------------
+
+.. automodule:: tech_tools.resources
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+tech\_tools.utilities module
+----------------------------
+
+.. automodule:: tech_tools.utilities
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+tech\_tools.wireshark module
+----------------------------
+
+.. automodule:: tech_tools.wireshark
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: tech_tools
+   :members:
+   :undoc-members:
+   :show-inheritance:
