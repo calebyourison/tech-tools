@@ -1,7 +1,0 @@
-Technician Tools
-=================
-
-.. toctree::
-   :maxdepth: 4
-
-   tech_tools
