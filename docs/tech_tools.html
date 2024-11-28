@@ -1,0 +1,567 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tech_tools package &mdash; tech-tools 0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=10f1778b"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Technician Tools" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            tech-tools
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Technician Tools</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">tech_tools package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-tech_tools.cli">tech_tools.cli module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#tech_tools.cli.ipconfig"><code class="docutils literal notranslate"><span class="pre">ipconfig()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tech_tools.cli.local_arp"><code class="docutils literal notranslate"><span class="pre">local_arp()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tech_tools.cli.parse_ipconfig"><code class="docutils literal notranslate"><span class="pre">parse_ipconfig()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tech_tools.cli.parse_local_arp"><code class="docutils literal notranslate"><span class="pre">parse_local_arp()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tech_tools.cli.parse_trace_route_local"><code class="docutils literal notranslate"><span class="pre">parse_trace_route_local()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tech_tools.cli.ping_range_ip"><code class="docutils literal notranslate"><span class="pre">ping_range_ip()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tech_tools.cli.ping_single_ip"><code class="docutils literal notranslate"><span class="pre">ping_single_ip()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tech_tools.cli.trace_route"><code class="docutils literal notranslate"><span class="pre">trace_route()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-tech_tools.detective_functions">tech_tools.detective_functions module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#tech_tools.detective_functions.local_devices"><code class="docutils literal notranslate"><span class="pre">local_devices()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tech_tools.detective_functions.semi_local_devices"><code class="docutils literal notranslate"><span class="pre">semi_local_devices()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-tech_tools.resources">tech_tools.resources module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#tech_tools.resources.mac_lookup"><code class="docutils literal notranslate"><span class="pre">mac_lookup()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-tech_tools.utilities">tech_tools.utilities module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#tech_tools.utilities.generate_range_from_subnet"><code class="docutils literal notranslate"><span class="pre">generate_range_from_subnet()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tech_tools.utilities.generate_range_from_two_ips"><code class="docutils literal notranslate"><span class="pre">generate_range_from_two_ips()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tech_tools.utilities.local_ip"><code class="docutils literal notranslate"><span class="pre">local_ip()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tech_tools.utilities.reachable_tcp_single_ip"><code class="docutils literal notranslate"><span class="pre">reachable_tcp_single_ip()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tech_tools.utilities.tcp_ip_port_scanner"><code class="docutils literal notranslate"><span class="pre">tcp_ip_port_scanner()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-tech_tools.wireshark">tech_tools.wireshark module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#tech_tools.wireshark.wireshark_extract"><code class="docutils literal notranslate"><span class="pre">wireshark_extract()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tech_tools.wireshark.wireshark_mac_addresses"><code class="docutils literal notranslate"><span class="pre">wireshark_mac_addresses()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tech_tools.wireshark.wireshark_private_ips"><code class="docutils literal notranslate"><span class="pre">wireshark_private_ips()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-tech_tools">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">tech-tools</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Technician Tools</a></li>
+      <li class="breadcrumb-item active">tech_tools package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/tech_tools.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tech-tools-package">
+<h1>tech_tools package<a class="headerlink" href="#tech-tools-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-tech_tools.cli">
+<span id="tech-tools-cli-module"></span><h2>tech_tools.cli module<a class="headerlink" href="#module-tech_tools.cli" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tech_tools.cli.ipconfig">
+<span class="sig-prename descclassname"><span class="pre">tech_tools.cli.</span></span><span class="sig-name descname"><span class="pre">ipconfig</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tech_tools/cli.html#ipconfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tech_tools.cli.ipconfig" title="Link to this definition"></a></dt>
+<dd><p>Return string of raw ip configuration info from CLI.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Printout of ipconifg /all on Windows or nmcli device show on linux</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Note:</dt><dd><p>Use of this function on Linux requires that nmcli be installed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tech_tools.cli.local_arp">
+<span class="sig-prename descclassname"><span class="pre">tech_tools.cli.</span></span><span class="sig-name descname"><span class="pre">local_arp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tech_tools/cli.html#local_arp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tech_tools.cli.local_arp" title="Link to this definition"></a></dt>
+<dd><p>Return string of raw ip configuration info from CLI.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Printout of the local arp table</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tech_tools.cli.parse_ipconfig">
+<span class="sig-prename descclassname"><span class="pre">tech_tools.cli.</span></span><span class="sig-name descname"><span class="pre">parse_ipconfig</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tech_tools/cli.html#parse_ipconfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tech_tools.cli.parse_ipconfig" title="Link to this definition"></a></dt>
+<dd><p>Parse raw ipconfig information and return a list containing a dictionary for each valid interface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of dictionaries with keys: ip, subnet, mac, (gateway if present)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+<dl>
+<dt>Note:</dt><dd><p>Subnet will be provided as a mask on Windows (ex 255.255.255.0) and using CIDR notation on Linux (ex /24).</p>
+<p>Valid interfaces might not have a defined gateway.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tech_tools.cli.parse_local_arp">
+<span class="sig-prename descclassname"><span class="pre">tech_tools.cli.</span></span><span class="sig-name descname"><span class="pre">parse_local_arp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tech_tools/cli.html#parse_local_arp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tech_tools.cli.parse_local_arp" title="Link to this definition"></a></dt>
+<dd><p>Parse raw local arp data and return a Pandas DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Parsed information from the local arp table, IPv4 Address and Mac Address</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Pandas.DataFrame
+columns: ip, mac</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tech_tools.cli.parse_trace_route_local">
+<span class="sig-prename descclassname"><span class="pre">tech_tools.cli.</span></span><span class="sig-name descname"><span class="pre">parse_trace_route_local</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">destination</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'8.8.8.8'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tech_tools/cli.html#parse_trace_route_local"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tech_tools.cli.parse_trace_route_local" title="Link to this definition"></a></dt>
+<dd><p>Parse raw trace route data into a list of hosts considered to be part of local/private networks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>destination</strong> (<em>str</em><em>, </em><em>IPv4Address</em>) – (optional) Remote host, 8.8.8.8 by default</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Hosts (hops) along a given trace route with local (private) addresses</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tech_tools.cli.ping_range_ip">
+<span class="sig-prename descclassname"><span class="pre">tech_tools.cli.</span></span><span class="sig-name descname"><span class="pre">ping_range_ip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tech_tools/cli.html#ping_range_ip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tech_tools.cli.ping_range_ip" title="Link to this definition"></a></dt>
+<dd><p>Ping a list of hosts and return list of hosts that produced a valid response.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ip_list</strong> (<em>list</em>) – Containing either str or IPv4Address objects of hosts</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>IPv4Address objects that responded to a ping</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tech_tools.cli.ping_single_ip">
+<span class="sig-prename descclassname"><span class="pre">tech_tools.cli.</span></span><span class="sig-name descname"><span class="pre">ping_single_ip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tech_tools/cli.html#ping_single_ip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tech_tools.cli.ping_single_ip" title="Link to this definition"></a></dt>
+<dd><p>Ping a single host and append to output list if successful.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ip</strong> (<em>str</em><em>, </em><em>IPv4Address</em>) – A valid IPv4 Address, example “10.10.10.132”</p></li>
+<li><p><strong>output</strong> (<em>list</em>) – List to update with values</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing, external list will be updated</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tech_tools.cli.trace_route">
+<span class="sig-prename descclassname"><span class="pre">tech_tools.cli.</span></span><span class="sig-name descname"><span class="pre">trace_route</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">destination</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'8.8.8.8'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tech_tools/cli.html#trace_route"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tech_tools.cli.trace_route" title="Link to this definition"></a></dt>
+<dd><p>Determine route from local host to a given destination and return raw string data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>destination</strong> (<em>str</em><em>, </em><em>IPv4Address</em>) – (optional) Remote host, 8.8.8.8 by default</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Printout of tracert on Windows or traceroute on Linux</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Note:</dt><dd><p>Use of this function on Linux requires that traceroute be installed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-tech_tools.detective_functions">
+<span id="tech-tools-detective-functions-module"></span><h2>tech_tools.detective_functions module<a class="headerlink" href="#module-tech_tools.detective_functions" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tech_tools.detective_functions.local_devices">
+<span class="sig-prename descclassname"><span class="pre">tech_tools.detective_functions.</span></span><span class="sig-name descname"><span class="pre">local_devices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tech_tools/detective_functions.html#local_devices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tech_tools.detective_functions.local_devices" title="Link to this definition"></a></dt>
+<dd><p>Return a DataFrame containing ip, mac, valid tcp ports, and manufacture information obtained from local network</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>network</strong> (<em>str</em><em>, </em><em>IPv4Address</em>) – (optional) Interface IP Address, local_ip() by default</p></li>
+<li><p><strong>ports</strong> (<em>list</em>) – (optional) TCP ports to scan, should be provided as integers, [80, 443] by default</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>host ip addresses, mac addresses, valid tcp ports, manufacturing company</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pandas.DataFrame</p>
+</dd>
+</dl>
+<dl>
+<dt>Note:</dt><dd><p>If no interface address is provided, the function will attempt to locate devices based on the address returned
+from the local_ip() function. If multiple interfaces are present, it is recommended to manually select the preferred one.</p>
+<p>This function requires a valid host ping, as well as a valid entry in the local arp table.  Some hosts might not meet these criteria.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tech_tools.detective_functions.semi_local_devices">
+<span class="sig-prename descclassname"><span class="pre">tech_tools.detective_functions.</span></span><span class="sig-name descname"><span class="pre">semi_local_devices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">destination</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'8.8.8.8'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tech_tools/detective_functions.html#semi_local_devices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tech_tools.detective_functions.semi_local_devices" title="Link to this definition"></a></dt>
+<dd><p>Return a DataFrame of ip and TCP port information for Private networks along a designated trace route path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>destination</strong> (<em>str</em><em>, </em><em>IPv4Address</em>) – (optional) Remote host, 8.8.8.8 by default</p></li>
+<li><p><strong>ports</strong> (<em>list</em>) – (optional) TCP ports to scan, should be provided as integers, [80, 443] by default</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>host ip addresses, valid tcp ports</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pandas.DataFrame</p>
+</dd>
+</dl>
+<dl>
+<dt>Note:</dt><dd><p>Assumes /24 subnet, though this might not be correct in many cases.</p>
+<p>Recommended to scan networks individually if subnets of different sizes exist along the trace path.
+A list of local networks along the trace path can be achieved with parse_trace_route_local().</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-tech_tools.resources">
+<span id="tech-tools-resources-module"></span><h2>tech_tools.resources module<a class="headerlink" href="#module-tech_tools.resources" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tech_tools.resources.mac_lookup">
+<span class="sig-prename descclassname"><span class="pre">tech_tools.resources.</span></span><span class="sig-name descname"><span class="pre">mac_lookup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mac_address</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tech_tools/resources.html#mac_lookup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tech_tools.resources.mac_lookup" title="Link to this definition"></a></dt>
+<dd><p>Return the manufacturing company for a given host mac address, “not_found” for failed matches.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mac_address</strong> (<em>str</em>) – Host mac address, example “00:1A:2B:3C:4D:5E”</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Manufacturing company</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-tech_tools.utilities">
+<span id="tech-tools-utilities-module"></span><h2>tech_tools.utilities module<a class="headerlink" href="#module-tech_tools.utilities" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tech_tools.utilities.generate_range_from_subnet">
+<span class="sig-prename descclassname"><span class="pre">tech_tools.utilities.</span></span><span class="sig-name descname"><span class="pre">generate_range_from_subnet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subnet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">24</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tech_tools/utilities.html#generate_range_from_subnet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tech_tools.utilities.generate_range_from_subnet" title="Link to this definition"></a></dt>
+<dd><p>Return a list of IPv4 Address objects based on provided subnet information.
+Excludes network and broadcast addresses.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ip</strong> (<em>str</em><em>, </em><em>IPv4Address</em>) – A valid IPv4 Address</p></li>
+<li><p><strong>subnet</strong> (<em>int</em><em>, </em><em>str</em>) – (optional) CIDR notation integer value or subnet mask convention, 24 bf default</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>IPv4 Address objects based upon range of provided subnet, excluding network and broadcast addresses</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+<dl>
+<dt>Note:</dt><dd><p>If subnet is not referenced in either the ip or subnet params, function assumes 24 or (255.255.255.0).
+CIDR notation in ip param overrides subnet param.</p>
+<dl>
+<dt>The following are examples of valid inputs:</dt><dd><p>“10.0.0.1” &lt;- assumption of 255.255.255.0 or 24</p>
+<p>IPv4Address(“192.168.10.10”) &lt;- assumption of 255.255.255.0 or 24</p>
+<p>“192.168.5.1/20” &lt;- overrides subnet parameter</p>
+<p>(“192.168.0.1”, 24)</p>
+<p>(“10.10.2.0”, “255.255.255.0”)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tech_tools.utilities.generate_range_from_two_ips">
+<span class="sig-prename descclassname"><span class="pre">tech_tools.utilities.</span></span><span class="sig-name descname"><span class="pre">generate_range_from_two_ips</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">first_ip</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">second_ip</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tech_tools/utilities.html#generate_range_from_two_ips"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tech_tools.utilities.generate_range_from_two_ips" title="Link to this definition"></a></dt>
+<dd><p>Return a list of IPv4 Address objects between two provided IP addresses, including both provided addresses.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>first_ip</strong> (<em>str</em><em>, </em><em>IPv4Address</em>) – A valid IPv4 Address, example “10.10.10.132”</p></li>
+<li><p><strong>second_ip</strong> (<em>str</em><em>, </em><em>IPv4Address</em>) – A valid IPv4 Address, example IPv4Address(“10.10.10.157”)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Both addresses along with every possible address in between them</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+<dl>
+<dt>Note:</dt><dd><p>The returned list will have complete disregard for any subnet boundaries, broadcast addresses, etc.</p>
+<p>Use some discretion as this function can generate a list with billions of values.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tech_tools.utilities.local_ip">
+<span class="sig-prename descclassname"><span class="pre">tech_tools.utilities.</span></span><span class="sig-name descname"><span class="pre">local_ip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tech_tools/utilities.html#local_ip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tech_tools.utilities.local_ip" title="Link to this definition"></a></dt>
+<dd><p>Return local IPv4Address for the primary interface by way of attempting a socket connection.
+Unsuccessful socket attempt will return 127.0.0.1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>IP address for the primary interface</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>IPv4Address</p>
+</dd>
+</dl>
+<dl>
+<dt>Note:</dt><dd><p>This function attempts to forge a connection via the primary interface, in the event that multiple valid
+interfaces are online, the result may be undesirable.  Either disable other interfaces, or determine local ip
+via other means.</p>
+<p>If using a statically defined IP address (for instance, while connecting to an offline, unmanaged switch) it is
+highly recommended to supply an address, subnet, and gateway.  Omission of this information could prevent a
+valid socket attempt and default to the fallback interface depending on a few factors.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tech_tools.utilities.reachable_tcp_single_ip">
+<span class="sig-prename descclassname"><span class="pre">tech_tools.utilities.</span></span><span class="sig-name descname"><span class="pre">reachable_tcp_single_ip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tech_tools/utilities.html#reachable_tcp_single_ip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tech_tools.utilities.reachable_tcp_single_ip" title="Link to this definition"></a></dt>
+<dd><p>Determine if a given host on a given port is reachable via TCP socket connection, add successful values to dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>host</strong> (<em>str</em><em>, </em><em>IPv4Address</em>) – A valid IPv4 Address, example “10.10.10.132”</p></li>
+<li><p><strong>port</strong> (<em>int</em>) – Port on which to attempt connection</p></li>
+<li><p><strong>output</strong> (<em>dict</em>) – Reachable hosts will be added to this</p></li>
+<li><p><strong>timeout</strong> (<em>int</em>) – (optional) Number of seconds to wait for a timeout failure, default 4</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing, external dictionary will be updated</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+<dl>
+<dt>Note:</dt><dd><p>The dictionary will be updated in the following format: {IP4Address: [port], IPv4Address: [port1, port2], …}</p>
+<p>If host is already present within the dictionary, the port will be appended to the existing list.
+However, if the port in question already exists within said list, it will not be added to avoid duplicates</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tech_tools.utilities.tcp_ip_port_scanner">
+<span class="sig-prename descclassname"><span class="pre">tech_tools.utilities.</span></span><span class="sig-name descname"><span class="pre">tcp_ip_port_scanner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tech_tools/utilities.html#tcp_ip_port_scanner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tech_tools.utilities.tcp_ip_port_scanner" title="Link to this definition"></a></dt>
+<dd><p>Determine which hosts from a given list are reachable via a port or list of ports, return dictionary or DataFrame
+of valid connections.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ip_list</strong> (<em>list</em>) – Containing either str ip “10.10.1.1” or IPv4Address(“10.10.1.1”) objects</p></li>
+<li><p><strong>ports</strong> (<em>int</em><em>, </em><em>list</em>) – Either a single int port or list of int ports</p></li>
+<li><p><strong>df</strong> (<em>bool</em>) – (optional) This entry will determine what format is returned, True by default and therefore a DataFrame.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Hosts with associated ports on which they responded</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict, Pandas.DataFrame</p>
+</dd>
+</dl>
+<dl>
+<dt>Note:</dt><dd><p>Dictionary formatted as: {IPv4Address(“10.10.1.1”): [80, 443], …}</p>
+<p>DataFrame columns: ip, ports</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-tech_tools.wireshark">
+<span id="tech-tools-wireshark-module"></span><h2>tech_tools.wireshark module<a class="headerlink" href="#module-tech_tools.wireshark" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tech_tools.wireshark.wireshark_extract">
+<span class="sig-prename descclassname"><span class="pre">tech_tools.wireshark.</span></span><span class="sig-name descname"><span class="pre">wireshark_extract</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tech_tools/wireshark.html#wireshark_extract"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tech_tools.wireshark.wireshark_extract" title="Link to this definition"></a></dt>
+<dd><p>Return a Series of desired information from a Wireshark JSON file using GroupBy.
+Includes docs_source ip, docs_source mac, docs_source mac company, destination ip, protocol, and category</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file</strong> (<em>str</em>) – Valid path to a JSON wireshark file</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Groupby format docs_source ip, docs_source mac, docs_source mac company, destination ip, protocol, and category</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pandas.Series</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tech_tools.wireshark.wireshark_mac_addresses">
+<span class="sig-prename descclassname"><span class="pre">tech_tools.wireshark.</span></span><span class="sig-name descname"><span class="pre">wireshark_mac_addresses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tech_tools/wireshark.html#wireshark_mac_addresses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tech_tools.wireshark.wireshark_mac_addresses" title="Link to this definition"></a></dt>
+<dd><p>Return MAC Address/Manufacturer information from a Wireshark JSON file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file</strong> (<em>str</em>) – Valid path to a Wireshark JSON file</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>docs_source mac, docs_source mac manufacturing company</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tech_tools.wireshark.wireshark_private_ips">
+<span class="sig-prename descclassname"><span class="pre">tech_tools.wireshark.</span></span><span class="sig-name descname"><span class="pre">wireshark_private_ips</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tech_tools/wireshark.html#wireshark_private_ips"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tech_tools.wireshark.wireshark_private_ips" title="Link to this definition"></a></dt>
+<dd><p>Return private IP addresses from a Wireshark JSON file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file</strong> (<em>str</em>) – Valid path to a Wireshark JSON file</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>IPv4Address objects within the range that falls under the category of Private networks</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-tech_tools">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-tech_tools" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="Technician Tools" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Caleb Yourison.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

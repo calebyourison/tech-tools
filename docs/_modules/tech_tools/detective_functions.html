@@ -1,0 +1,218 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tech_tools.detective_functions &mdash; tech-tools 0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=10f1778b"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            tech-tools
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Technician Tools</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">tech-tools</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">tech_tools.detective_functions</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tech_tools.detective_functions</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">tech_tools.utilities</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">generate_range_from_subnet</span><span class="p">,</span>
+    <span class="n">local_ip</span><span class="p">,</span>
+    <span class="n">tcp_ip_port_scanner</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">tech_tools.cli</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ping_range_ip</span><span class="p">,</span>
+    <span class="n">parse_local_arp</span><span class="p">,</span>
+    <span class="n">parse_trace_route_local</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">tech_tools.resources</span> <span class="kn">import</span> <span class="n">mac_lookup</span>
+
+
+<div class="viewcode-block" id="local_devices">
+<a class="viewcode-back" href="../../tech_tools.html#tech_tools.detective_functions.local_devices">[docs]</a>
+<span class="k">def</span> <span class="nf">local_devices</span><span class="p">(</span><span class="n">network</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ports</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a DataFrame containing ip, mac, valid tcp ports, and manufacture information obtained from local network</span>
+
+<span class="sd">    :param network: (optional) Interface IP Address, local_ip() by default</span>
+<span class="sd">    :type network: str, IPv4Address</span>
+<span class="sd">    :param ports: (optional) TCP ports to scan, should be provided as integers, [80, 443] by default</span>
+<span class="sd">    :type ports: list</span>
+
+<span class="sd">    :return: host ip addresses, mac addresses, valid tcp ports, manufacturing company</span>
+<span class="sd">    :rtype: Pandas.DataFrame</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        If no interface address is provided, the function will attempt to locate devices based on the address returned</span>
+<span class="sd">        from the local_ip() function. If multiple interfaces are present, it is recommended to manually select the preferred one.</span>
+
+<span class="sd">        This function requires a valid host ping, as well as a valid entry in the local arp table.  Some hosts might not meet these criteria.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">network</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">network</span> <span class="o">=</span> <span class="n">local_ip</span><span class="p">()</span>
+    <span class="n">local_network</span> <span class="o">=</span> <span class="n">generate_range_from_subnet</span><span class="p">(</span><span class="n">network</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Attempting to gather information for local devices, please wait...&quot;</span><span class="p">)</span>
+    <span class="n">successful_pings</span> <span class="o">=</span> <span class="n">ping_range_ip</span><span class="p">(</span><span class="n">local_network</span><span class="p">)</span>
+
+    <span class="c1"># Look on supplied tcp ports, using http and https by default</span>
+    <span class="k">if</span> <span class="n">ports</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ports</span> <span class="o">=</span> <span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">443</span><span class="p">]</span>
+
+    <span class="n">successful_tcp_requests</span> <span class="o">=</span> <span class="n">tcp_ip_port_scanner</span><span class="p">(</span>
+        <span class="n">successful_pings</span><span class="p">,</span> <span class="n">ports</span><span class="o">=</span><span class="n">ports</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+
+    <span class="n">local_arp_table</span> <span class="o">=</span> <span class="n">parse_local_arp</span><span class="p">()</span>
+
+    <span class="c1"># Subset arp table df with ip addresses that received valid pings</span>
+    <span class="n">local_arp_table</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">local_arp_table</span><span class="p">[</span><span class="n">local_arp_table</span><span class="p">[</span><span class="s2">&quot;ip&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">successful_pings</span><span class="p">)]</span>
+        <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;ip&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Map ports to dataframe using tcp dictionary</span>
+    <span class="n">local_arp_table</span><span class="p">[</span><span class="s2">&quot;ports&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">local_arp_table</span><span class="p">[</span><span class="s2">&quot;ip&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">successful_tcp_requests</span><span class="p">)</span>
+
+    <span class="n">local_arp_table</span><span class="p">[</span><span class="s2">&quot;company&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">local_arp_table</span><span class="p">[</span><span class="s2">&quot;mac&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">mac_lookup</span><span class="p">)</span>
+
+    <span class="c1"># All manufacturing company values will be listed as not_found in case a match is not obtained</span>
+    <span class="c1">#local_arp_table[&quot;company&quot;] = &quot;not_found&quot;</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;for device in local_arp_table[&quot;mac&quot;].to_list():</span>
+<span class="sd">        # Locate the mac prefix within the manufacturer table</span>
+<span class="sd">        found = [mac for mac in mac_df[&quot;mac&quot;].to_list() if device.startswith(mac)]</span>
+<span class="sd">        if len(found) == 1:</span>
+<span class="sd">            # Use that prefix to identify the manufacturer</span>
+<span class="sd">            company = mac_df[mac_df[&quot;mac&quot;].isin(found)][&quot;company&quot;].iloc[0]</span>
+<span class="sd">            # Write that company name into the local_arp_table in the row where the original mac address was located</span>
+<span class="sd">            local_arp_table[&quot;company&quot;] = np.where(</span>
+<span class="sd">                (local_arp_table[&quot;mac&quot;] == device), company, local_arp_table[&quot;company&quot;]</span>
+<span class="sd">            )&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">local_arp_table</span></div>
+
+
+
+<div class="viewcode-block" id="semi_local_devices">
+<a class="viewcode-back" href="../../tech_tools.html#tech_tools.detective_functions.semi_local_devices">[docs]</a>
+<span class="k">def</span> <span class="nf">semi_local_devices</span><span class="p">(</span><span class="n">destination</span><span class="o">=</span><span class="s2">&quot;8.8.8.8&quot;</span><span class="p">,</span> <span class="n">ports</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a DataFrame of ip and TCP port information for Private networks along a designated trace route path.</span>
+
+<span class="sd">    :param destination: (optional) Remote host, 8.8.8.8 by default</span>
+<span class="sd">    :type destination: str, IPv4Address</span>
+<span class="sd">    :param ports: (optional) TCP ports to scan, should be provided as integers, [80, 443] by default</span>
+<span class="sd">    :type ports: list</span>
+
+<span class="sd">    :return: host ip addresses, valid tcp ports</span>
+<span class="sd">    :rtype: Pandas.DataFrame</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        Assumes /24 subnet, though this might not be correct in many cases.</span>
+
+<span class="sd">        Recommended to scan networks individually if subnets of different sizes exist along the trace path.</span>
+<span class="sd">        A list of local networks along the trace path can be achieved with parse_trace_route_local().</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Attempting to gather information for semi-local devices, please wait...&quot;</span><span class="p">)</span>
+    <span class="c1"># Identify hops with private IP address</span>
+    <span class="n">private_ips</span> <span class="o">=</span> <span class="n">parse_trace_route_local</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span>
+
+    <span class="c1"># Generate a subnet for each hop, list comprehension to expand for all ip address to scan</span>
+    <span class="n">hosts_to_scan</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">ip</span> <span class="k">for</span> <span class="n">host</span> <span class="ow">in</span> <span class="n">private_ips</span> <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">generate_range_from_subnet</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
+    <span class="p">]</span>
+
+    <span class="c1"># Look on supplied tcp ports, using http and https by default</span>
+    <span class="k">if</span> <span class="n">ports</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ports</span> <span class="o">=</span> <span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">443</span><span class="p">]</span>
+
+    <span class="n">successful_tcp_requests</span> <span class="o">=</span> <span class="n">tcp_ip_port_scanner</span><span class="p">(</span><span class="n">hosts_to_scan</span><span class="p">,</span> <span class="n">ports</span><span class="o">=</span><span class="n">ports</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">successful_tcp_requests</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Caleb Yourison.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
