@@ -20,6 +20,14 @@ tech\_tools.detective\_functions module
    :undoc-members:
    :show-inheritance:
 
+tech\_tools.multicast module
+---------------------------------------
+
+.. automodule:: tech_tools.multicast
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 tech\_tools.resources module
 ----------------------------
 

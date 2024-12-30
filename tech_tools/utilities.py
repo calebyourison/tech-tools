@@ -11,7 +11,7 @@ pd.set_option("max_colwidth", 400)
 
 
 # General information
-def local_ip():
+def local_ip() -> IPv4Address:
     """Return local IPv4Address for the primary interface by way of attempting a socket connection.
     Unsuccessful socket attempt will return 127.0.0.1.
 
@@ -43,13 +43,15 @@ def local_ip():
 
 
 # IP address lists
-def generate_range_from_subnet(ip, subnet=24):
+def generate_range_from_subnet(
+    ip: str | IPv4Address, subnet: str | IPv4Address = 24
+) -> list[IPv4Address]:
     """Return a list of IPv4 Address objects based on provided subnet information.
     Excludes network and broadcast addresses.
 
     :param ip: A valid IPv4 Address
     :type ip: str, IPv4Address
-    :param subnet: (optional) CIDR notation integer value or subnet mask convention, 24 bf default
+    :param subnet: (optional) CIDR notation integer value or subnet mask convention, 24 by default
     :type subnet: int, str
 
     :return: IPv4 Address objects based upon range of provided subnet, excluding network and broadcast addresses
@@ -90,7 +92,9 @@ def generate_range_from_subnet(ip, subnet=24):
     return network_hosts
 
 
-def generate_range_from_two_ips(first_ip, second_ip):
+def generate_range_from_two_ips(
+    first_ip: str | IPv4Address, second_ip: str | IPv4Address
+) -> list[IPv4Address]:
     """Return a list of IPv4 Address objects between two provided IP addresses, including both provided addresses.
 
     :param first_ip: A valid IPv4 Address, example "10.10.10.132"
@@ -125,7 +129,12 @@ def generate_range_from_two_ips(first_ip, second_ip):
 
 
 # TCP
-def reachable_tcp_single_ip(host, port, output, timeout=4):
+def reachable_tcp_single_ip(
+    host: str | IPv4Address,
+    port: int,
+    output: dict[IPv4Address, list[int]],
+    timeout: int = 4,
+) -> None:
     """Determine if a given host on a given port is reachable via TCP socket connection, add successful values to dictionary.
 
     :param host: A valid IPv4 Address, example "10.10.10.132"
@@ -169,7 +178,9 @@ def reachable_tcp_single_ip(host, port, output, timeout=4):
         soc.close()
 
 
-def tcp_ip_port_scanner(ip_list, ports, df=True):
+def tcp_ip_port_scanner(
+    ip_list: list[str | IPv4Address], ports: int | list[int], df: bool = True
+) -> dict[IPv4Address, list[int]] | pd.DataFrame:
     """Determine which hosts from a given list are reachable via a port or list of ports, return dictionary or DataFrame
     of valid connections.
 
@@ -181,7 +192,7 @@ def tcp_ip_port_scanner(ip_list, ports, df=True):
     :type df: bool
 
     :return: Hosts with associated ports on which they responded
-    :rtype: dict, Pandas.DataFrame
+    :rtype: dict, pd.DataFrame
 
     Note:
         Dictionary formatted as: {IPv4Address("10.10.1.1"): [80, 443], ...}

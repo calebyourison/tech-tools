@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>tech_tools.wireshark &mdash; tech-tools 0.2 documentation</title>
+  <title>tech_tools.wireshark &mdash; tech-tools 0.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=10f1778b"></script>
+      <script src="../../_static/documentation_options.js?v=b489f392"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -85,14 +85,14 @@
 
 <div class="viewcode-block" id="wireshark_extract">
 <a class="viewcode-back" href="../../tech_tools.html#tech_tools.wireshark.wireshark_extract">[docs]</a>
-<span class="k">def</span> <span class="nf">wireshark_extract</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">wireshark_extract</span><span class="p">(</span><span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a Series of desired information from a Wireshark JSON file using GroupBy.</span>
 <span class="sd">    Includes docs_source ip, docs_source mac, docs_source mac company, destination ip, protocol, and category</span>
 
 <span class="sd">    :param file: Valid path to a JSON wireshark file</span>
 <span class="sd">    :type file: str</span>
 
-<span class="sd">    :return: Groupby format docs_source ip, docs_source mac, docs_source mac company, destination ip, protocol, and category</span>
+<span class="sd">    :return: Groupby format docs_source ip, src_mac, src_mac_company, destination ip, protocol, and category</span>
 <span class="sd">    :rtype: Pandas.Series</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">raw</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
@@ -122,7 +122,7 @@
 
 <div class="viewcode-block" id="wireshark_private_ips">
 <a class="viewcode-back" href="../../tech_tools.html#tech_tools.wireshark.wireshark_private_ips">[docs]</a>
-<span class="k">def</span> <span class="nf">wireshark_private_ips</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">wireshark_private_ips</span><span class="p">(</span><span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IPv4Address</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return private IP addresses from a Wireshark JSON file</span>
 
 <span class="sd">    :param file: Valid path to a Wireshark JSON file</span>
@@ -152,12 +152,12 @@
 
 <div class="viewcode-block" id="wireshark_mac_addresses">
 <a class="viewcode-back" href="../../tech_tools.html#tech_tools.wireshark.wireshark_mac_addresses">[docs]</a>
-<span class="k">def</span> <span class="nf">wireshark_mac_addresses</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">wireshark_mac_addresses</span><span class="p">(</span><span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return MAC Address/Manufacturer information from a Wireshark JSON file</span>
 
 <span class="sd">    :param file: Valid path to a Wireshark JSON file</span>
 <span class="sd">    :type file: str</span>
-<span class="sd">    :return: docs_source mac, docs_source mac manufacturing company</span>
+<span class="sd">    :return: Dataframe with columns src_mac, src_mac_company</span>
 <span class="sd">    :rtype: Pandas.DataFrame</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">source_df</span> <span class="o">=</span> <span class="n">wireshark_extract</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>

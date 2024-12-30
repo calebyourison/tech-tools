@@ -34,6 +34,8 @@ from tech_tools.detective_functions import local_devices, semi_local_devices
 
 from tech_tools.resources import json_file, mac_lookup
 
+from tech_tools.multicast import multicast_listen
+
 loopback_interface = "127.0.0.1"
 google_dns = "8.8.8.8"
 invalid_host = "192.0.0.1"
@@ -276,9 +278,19 @@ class TestDetectiveFunctions(unittest.TestCase):
 
     def test_local_devices(self):
         """Test function to assert local_devices returns a DataFrame with the correct columns"""
-        df = local_devices()
-        self.assertIsInstance(df, pd.DataFrame)
-        self.assertEqual(sorted(["ip", "mac", "ports", "company"]), sorted(df.columns))
+
+        list_of_ips = ['10.0.0.100', '10.0.0.101', IPv4Address('10.0.0.150')]
+        cidr_notion = '172.20.0.1/28'
+        single_ip = '10.0.50.10'
+        ipv4_address_object = IPv4Address('10.0.13.199')
+
+        criteria = [list_of_ips, cidr_notion, single_ip, ipv4_address_object, None]
+
+        for item in criteria:
+
+            df = local_devices(network=item)
+            self.assertIsInstance(df, pd.DataFrame)
+            self.assertEqual(sorted(["ip", "mac", "ports", "company"]), sorted(df.columns))
 
     def test_semi_local_devices(self):
         """Test function to assert semi_local_devices returns a DataFrame with
@@ -323,3 +335,12 @@ class TestResourcesFunctions(unittest.TestCase):
         for result in normal_results:
             self.assertIsInstance(result, str)
             self.assertEqual(result, expected_company)
+
+
+class TestMulticastFunctions(unittest.TestCase):
+    """Defines a class to test multicast functions"""
+    def test_multicast_listen(self):
+        """Test function to assert multicast_listen returns a dictionary"""
+
+        default_settings = multicast_listen(duration=1)
+        self.assertIsInstance(default_settings, dict)

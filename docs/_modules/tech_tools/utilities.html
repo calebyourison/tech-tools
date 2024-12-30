@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>tech_tools.utilities &mdash; tech-tools 0.2 documentation</title>
+  <title>tech_tools.utilities &mdash; tech-tools 0.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=10f1778b"></script>
+      <script src="../../_static/documentation_options.js?v=b489f392"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -84,7 +84,7 @@
 <span class="c1"># General information</span>
 <div class="viewcode-block" id="local_ip">
 <a class="viewcode-back" href="../../tech_tools.html#tech_tools.utilities.local_ip">[docs]</a>
-<span class="k">def</span> <span class="nf">local_ip</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">local_ip</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">IPv4Address</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return local IPv4Address for the primary interface by way of attempting a socket connection.</span>
 <span class="sd">    Unsuccessful socket attempt will return 127.0.0.1.</span>
 
@@ -119,13 +119,15 @@
 <span class="c1"># IP address lists</span>
 <div class="viewcode-block" id="generate_range_from_subnet">
 <a class="viewcode-back" href="../../tech_tools.html#tech_tools.utilities.generate_range_from_subnet">[docs]</a>
-<span class="k">def</span> <span class="nf">generate_range_from_subnet</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">subnet</span><span class="o">=</span><span class="mi">24</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">generate_range_from_subnet</span><span class="p">(</span>
+    <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">IPv4Address</span><span class="p">,</span> <span class="n">subnet</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">IPv4Address</span> <span class="o">=</span> <span class="mi">24</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IPv4Address</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a list of IPv4 Address objects based on provided subnet information.</span>
 <span class="sd">    Excludes network and broadcast addresses.</span>
 
 <span class="sd">    :param ip: A valid IPv4 Address</span>
 <span class="sd">    :type ip: str, IPv4Address</span>
-<span class="sd">    :param subnet: (optional) CIDR notation integer value or subnet mask convention, 24 bf default</span>
+<span class="sd">    :param subnet: (optional) CIDR notation integer value or subnet mask convention, 24 by default</span>
 <span class="sd">    :type subnet: int, str</span>
 
 <span class="sd">    :return: IPv4 Address objects based upon range of provided subnet, excluding network and broadcast addresses</span>
@@ -169,7 +171,9 @@
 
 <div class="viewcode-block" id="generate_range_from_two_ips">
 <a class="viewcode-back" href="../../tech_tools.html#tech_tools.utilities.generate_range_from_two_ips">[docs]</a>
-<span class="k">def</span> <span class="nf">generate_range_from_two_ips</span><span class="p">(</span><span class="n">first_ip</span><span class="p">,</span> <span class="n">second_ip</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">generate_range_from_two_ips</span><span class="p">(</span>
+    <span class="n">first_ip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">IPv4Address</span><span class="p">,</span> <span class="n">second_ip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">IPv4Address</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IPv4Address</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a list of IPv4 Address objects between two provided IP addresses, including both provided addresses.</span>
 
 <span class="sd">    :param first_ip: A valid IPv4 Address, example &quot;10.10.10.132&quot;</span>
@@ -207,7 +211,12 @@
 <span class="c1"># TCP</span>
 <div class="viewcode-block" id="reachable_tcp_single_ip">
 <a class="viewcode-back" href="../../tech_tools.html#tech_tools.utilities.reachable_tcp_single_ip">[docs]</a>
-<span class="k">def</span> <span class="nf">reachable_tcp_single_ip</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">reachable_tcp_single_ip</span><span class="p">(</span>
+    <span class="n">host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">IPv4Address</span><span class="p">,</span>
+    <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">output</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">IPv4Address</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span>
+    <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine if a given host on a given port is reachable via TCP socket connection, add successful values to dictionary.</span>
 
 <span class="sd">    :param host: A valid IPv4 Address, example &quot;10.10.10.132&quot;</span>
@@ -254,7 +263,9 @@
 
 <div class="viewcode-block" id="tcp_ip_port_scanner">
 <a class="viewcode-back" href="../../tech_tools.html#tech_tools.utilities.tcp_ip_port_scanner">[docs]</a>
-<span class="k">def</span> <span class="nf">tcp_ip_port_scanner</span><span class="p">(</span><span class="n">ip_list</span><span class="p">,</span> <span class="n">ports</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">tcp_ip_port_scanner</span><span class="p">(</span>
+    <span class="n">ip_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="n">IPv4Address</span><span class="p">],</span> <span class="n">ports</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">df</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">IPv4Address</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">|</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine which hosts from a given list are reachable via a port or list of ports, return dictionary or DataFrame</span>
 <span class="sd">    of valid connections.</span>
 
@@ -266,7 +277,7 @@
 <span class="sd">    :type df: bool</span>
 
 <span class="sd">    :return: Hosts with associated ports on which they responded</span>
-<span class="sd">    :rtype: dict, Pandas.DataFrame</span>
+<span class="sd">    :rtype: dict, pd.DataFrame</span>
 
 <span class="sd">    Note:</span>
 <span class="sd">        Dictionary formatted as: {IPv4Address(&quot;10.10.1.1&quot;): [80, 443], ...}</span>

@@ -12,14 +12,14 @@ wireshark_columns_of_interest = {
 }
 
 
-def wireshark_extract(file):
+def wireshark_extract(file: str) -> pd.Series:
     """Return a Series of desired information from a Wireshark JSON file using GroupBy.
     Includes docs_source ip, docs_source mac, docs_source mac company, destination ip, protocol, and category
 
     :param file: Valid path to a JSON wireshark file
     :type file: str
 
-    :return: Groupby format docs_source ip, docs_source mac, docs_source mac company, destination ip, protocol, and category
+    :return: Groupby format docs_source ip, src_mac, src_mac_company, destination ip, protocol, and category
     :rtype: Pandas.Series
     """
     raw = pd.read_json(file)
@@ -46,7 +46,7 @@ def wireshark_extract(file):
     return groupby_object
 
 
-def wireshark_private_ips(file):
+def wireshark_private_ips(file: str) -> list[IPv4Address]:
     """Return private IP addresses from a Wireshark JSON file
 
     :param file: Valid path to a Wireshark JSON file
@@ -73,12 +73,12 @@ def wireshark_private_ips(file):
     return sorted(all_private_ips)
 
 
-def wireshark_mac_addresses(file):
+def wireshark_mac_addresses(file: str) -> pd.DataFrame:
     """Return MAC Address/Manufacturer information from a Wireshark JSON file
 
     :param file: Valid path to a Wireshark JSON file
     :type file: str
-    :return: docs_source mac, docs_source mac manufacturing company
+    :return: Dataframe with columns src_mac, src_mac_company
     :rtype: Pandas.DataFrame
     """
     source_df = wireshark_extract(file).reset_index()

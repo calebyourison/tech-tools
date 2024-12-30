@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>tech_tools.cli &mdash; tech-tools 0.2 documentation</title>
+  <title>tech_tools.cli &mdash; tech-tools 0.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=10f1778b"></script>
+      <script src="../../_static/documentation_options.js?v=b489f392"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -80,7 +80,7 @@
 <span class="c1"># IPCONFIG</span>
 <div class="viewcode-block" id="ipconfig">
 <a class="viewcode-back" href="../../tech_tools.html#tech_tools.cli.ipconfig">[docs]</a>
-<span class="k">def</span> <span class="nf">ipconfig</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">ipconfig</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return string of raw ip configuration info from CLI.</span>
 
 <span class="sd">    :return: Printout of ipconifg /all on Windows or nmcli device show on linux</span>
@@ -103,7 +103,7 @@
 
 <div class="viewcode-block" id="parse_ipconfig">
 <a class="viewcode-back" href="../../tech_tools.html#tech_tools.cli.parse_ipconfig">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_ipconfig</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">parse_ipconfig</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse raw ipconfig information and return a list containing a dictionary for each valid interface.</span>
 
 <span class="sd">    :return: List of dictionaries with keys: ip, subnet, mac, (gateway if present)</span>
@@ -160,6 +160,7 @@
         <span class="n">items_of_interest</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;Physical Address&quot;</span><span class="p">:</span> <span class="s2">&quot;mac&quot;</span><span class="p">,</span>
             <span class="s2">&quot;IPv4 Address&quot;</span><span class="p">:</span> <span class="s2">&quot;ip&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Autoconfiguration IPv4 Address&quot;</span><span class="p">:</span> <span class="s2">&quot;ip&quot;</span><span class="p">,</span>
             <span class="s2">&quot;Subnet Mask&quot;</span><span class="p">:</span> <span class="s2">&quot;subnet&quot;</span><span class="p">,</span>
             <span class="s2">&quot;Default Gateway&quot;</span><span class="p">:</span> <span class="s2">&quot;gateway&quot;</span><span class="p">,</span>
         <span class="p">}</span>
@@ -171,8 +172,8 @@
         <span class="k">for</span> <span class="n">interface</span> <span class="ow">in</span> <span class="n">valid_interfaces</span><span class="p">:</span>
             <span class="n">interface_dict</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="n">lines</span> <span class="o">=</span> <span class="n">interface</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
-            <span class="c1"># Remove white space to simplify upcoming sections</span>
-            <span class="n">stripped_lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">]</span>
+            <span class="c1"># Remove white space to simplify upcoming sections, ensure line can be split</span>
+            <span class="n">stripped_lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">item</span><span class="p">]</span>
 
             <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">stripped_lines</span><span class="p">:</span>
                 <span class="c1"># Create two pieces to work with</span>
@@ -197,7 +198,7 @@
 <span class="c1"># ARP</span>
 <div class="viewcode-block" id="local_arp">
 <a class="viewcode-back" href="../../tech_tools.html#tech_tools.cli.local_arp">[docs]</a>
-<span class="k">def</span> <span class="nf">local_arp</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">local_arp</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return string of raw ip configuration info from CLI.</span>
 
 <span class="sd">    :return: Printout of the local arp table</span>
@@ -217,7 +218,7 @@
 
 <div class="viewcode-block" id="parse_local_arp">
 <a class="viewcode-back" href="../../tech_tools.html#tech_tools.cli.parse_local_arp">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_local_arp</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">parse_local_arp</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse raw local arp data and return a Pandas DataFrame.</span>
 
 <span class="sd">    :return: Parsed information from the local arp table, IPv4 Address and Mac Address</span>
@@ -259,7 +260,7 @@
 <span class="c1"># Ping</span>
 <div class="viewcode-block" id="ping_single_ip">
 <a class="viewcode-back" href="../../tech_tools.html#tech_tools.cli.ping_single_ip">[docs]</a>
-<span class="k">def</span> <span class="nf">ping_single_ip</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">ping_single_ip</span><span class="p">(</span><span class="n">ip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">IPv4Address</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">IPv4Address</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Ping a single host and append to output list if successful.</span>
 
 <span class="sd">    :param ip: A valid IPv4 Address, example &quot;10.10.10.132&quot;</span>
@@ -291,7 +292,7 @@
 
 <div class="viewcode-block" id="ping_range_ip">
 <a class="viewcode-back" href="../../tech_tools.html#tech_tools.cli.ping_range_ip">[docs]</a>
-<span class="k">def</span> <span class="nf">ping_range_ip</span><span class="p">(</span><span class="n">ip_list</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">ping_range_ip</span><span class="p">(</span><span class="n">ip_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="n">IPv4Address</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IPv4Address</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Ping a list of hosts and return list of hosts that produced a valid response.</span>
 
 <span class="sd">    :param ip_list: Containing either str or IPv4Address objects of hosts</span>
@@ -323,8 +324,8 @@
 <span class="c1"># Trace Route</span>
 <div class="viewcode-block" id="trace_route">
 <a class="viewcode-back" href="../../tech_tools.html#tech_tools.cli.trace_route">[docs]</a>
-<span class="k">def</span> <span class="nf">trace_route</span><span class="p">(</span><span class="n">destination</span><span class="o">=</span><span class="s2">&quot;8.8.8.8&quot;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine route from local host to a given destination and return raw string data.</span>
+<span class="k">def</span> <span class="nf">trace_route</span><span class="p">(</span><span class="n">destination</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">IPv4Address</span> <span class="o">=</span> <span class="s2">&quot;8.8.8.8&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return raw string information from trace route of local host to a given destination</span>
 
 <span class="sd">    :param destination: (optional) Remote host, 8.8.8.8 by default</span>
 <span class="sd">    :type destination: str, IPv4Address</span>
@@ -355,7 +356,9 @@
 
 <div class="viewcode-block" id="parse_trace_route_local">
 <a class="viewcode-back" href="../../tech_tools.html#tech_tools.cli.parse_trace_route_local">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_trace_route_local</span><span class="p">(</span><span class="n">destination</span><span class="o">=</span><span class="s2">&quot;8.8.8.8&quot;</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">parse_trace_route_local</span><span class="p">(</span>
+    <span class="n">destination</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">IPv4Address</span> <span class="o">=</span> <span class="s2">&quot;8.8.8.8&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IPv4Address</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse raw trace route data into a list of hosts considered to be part of local/private networks.</span>
 
 <span class="sd">    :param destination: (optional) Remote host, 8.8.8.8 by default</span>

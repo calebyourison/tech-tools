@@ -7,7 +7,7 @@ import pandas as pd
 
 
 # IPCONFIG
-def ipconfig():
+def ipconfig() -> str:
     """Return string of raw ip configuration info from CLI.
 
     :return: Printout of ipconifg /all on Windows or nmcli device show on linux
@@ -27,7 +27,7 @@ def ipconfig():
     return ipconfig_output
 
 
-def parse_ipconfig():
+def parse_ipconfig() -> list[dict[str, str]]:
     """Parse raw ipconfig information and return a list containing a dictionary for each valid interface.
 
     :return: List of dictionaries with keys: ip, subnet, mac, (gateway if present)
@@ -84,6 +84,7 @@ def parse_ipconfig():
         items_of_interest = {
             "Physical Address": "mac",
             "IPv4 Address": "ip",
+            "Autoconfiguration IPv4 Address": "ip",
             "Subnet Mask": "subnet",
             "Default Gateway": "gateway",
         }
@@ -95,8 +96,8 @@ def parse_ipconfig():
         for interface in valid_interfaces:
             interface_dict = {}
             lines = interface.splitlines()
-            # Remove white space to simplify upcoming sections
-            stripped_lines = [item.strip() for item in lines]
+            # Remove white space to simplify upcoming sections, ensure line can be split
+            stripped_lines = [item.strip() for item in lines if ":" in item]
 
             for line in stripped_lines:
                 # Create two pieces to work with
@@ -118,7 +119,7 @@ def parse_ipconfig():
 
 
 # ARP
-def local_arp():
+def local_arp() -> str:
     """Return string of raw ip configuration info from CLI.
 
     :return: Printout of the local arp table
@@ -135,7 +136,7 @@ def local_arp():
     return arp_output
 
 
-def parse_local_arp():
+def parse_local_arp() -> pd.DataFrame:
     """Parse raw local arp data and return a Pandas DataFrame.
 
     :return: Parsed information from the local arp table, IPv4 Address and Mac Address
@@ -174,7 +175,7 @@ def parse_local_arp():
 
 
 # Ping
-def ping_single_ip(ip, output):
+def ping_single_ip(ip: str | IPv4Address, output: list[IPv4Address]) -> None:
     """Ping a single host and append to output list if successful.
 
     :param ip: A valid IPv4 Address, example "10.10.10.132"
@@ -203,7 +204,7 @@ def ping_single_ip(ip, output):
         output.append(IPv4Address(ip))
 
 
-def ping_range_ip(ip_list):
+def ping_range_ip(ip_list: list[str | IPv4Address]) -> list[IPv4Address]:
     """Ping a list of hosts and return list of hosts that produced a valid response.
 
     :param ip_list: Containing either str or IPv4Address objects of hosts
@@ -232,8 +233,8 @@ def ping_range_ip(ip_list):
 
 
 # Trace Route
-def trace_route(destination="8.8.8.8"):
-    """Determine route from local host to a given destination and return raw string data.
+def trace_route(destination: str | IPv4Address = "8.8.8.8") -> str:
+    """Return raw string information from trace route of local host to a given destination
 
     :param destination: (optional) Remote host, 8.8.8.8 by default
     :type destination: str, IPv4Address
@@ -261,7 +262,9 @@ def trace_route(destination="8.8.8.8"):
     return trace_output
 
 
-def parse_trace_route_local(destination="8.8.8.8"):
+def parse_trace_route_local(
+    destination: str | IPv4Address = "8.8.8.8",
+) -> list[IPv4Address]:
     """Parse raw trace route data into a list of hosts considered to be part of local/private networks.
 
     :param destination: (optional) Remote host, 8.8.8.8 by default

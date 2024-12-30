@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>tech_tools.resources &mdash; tech-tools 0.2 documentation</title>
+  <title>tech_tools.resources &mdash; tech-tools 0.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=10f1778b"></script>
+      <script src="../../_static/documentation_options.js?v=b489f392"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -87,9 +87,10 @@
 <span class="c1"># Mini JSON file for testing</span>
 <span class="n">json_file</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">files</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;wireshark.json&quot;</span><span class="p">))</span>
 
+
 <div class="viewcode-block" id="mac_lookup">
 <a class="viewcode-back" href="../../tech_tools.html#tech_tools.resources.mac_lookup">[docs]</a>
-<span class="k">def</span> <span class="nf">mac_lookup</span><span class="p">(</span><span class="n">mac_address</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">mac_lookup</span><span class="p">(</span><span class="n">mac_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the manufacturing company for a given host mac address, &quot;not_found&quot; for failed matches.</span>
 
 <span class="sd">    :param mac_address: Host mac address, example &quot;00:1A:2B:3C:4D:5E&quot;</span>
@@ -98,18 +99,18 @@
 <span class="sd">    :return: Manufacturing company</span>
 <span class="sd">    :rtype: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">company</span> <span class="o">=</span> <span class="s1">&#39;not_found&#39;</span>
+    <span class="n">company</span> <span class="o">=</span> <span class="s2">&quot;not_found&quot;</span>
     <span class="c1"># Convert to uppercase</span>
     <span class="n">mac_address</span> <span class="o">=</span> <span class="n">mac_address</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
     <span class="c1"># Replace &#39;-&#39; with &#39;:&#39;</span>
-    <span class="n">mac_address</span> <span class="o">=</span> <span class="n">mac_address</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;:&#39;</span><span class="p">)</span>
+    <span class="n">mac_address</span> <span class="o">=</span> <span class="n">mac_address</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">)</span>
 
     <span class="n">found</span> <span class="o">=</span> <span class="p">[</span><span class="n">mac</span> <span class="k">for</span> <span class="n">mac</span> <span class="ow">in</span> <span class="n">mac_df</span><span class="p">[</span><span class="s2">&quot;mac&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span> <span class="k">if</span> <span class="n">mac_address</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">mac</span><span class="p">)]</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">found</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="c1"># Use that prefix to identify the manufacturer</span>
         <span class="n">company</span> <span class="o">=</span> <span class="n">mac_df</span><span class="p">[</span><span class="n">mac_df</span><span class="p">[</span><span class="s2">&quot;mac&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">found</span><span class="p">)][</span><span class="s2">&quot;company&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-    <span class="k">return</span>  <span class="n">company</span></div>
+    <span class="k">return</span> <span class="n">company</span></div>
 
 </pre></div>
 

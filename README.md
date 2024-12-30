@@ -20,7 +20,7 @@ sudo apt-get install network-manager
 pip install tech-tools
 ```
 
-Simple examination of local network with accompany DataFrame:
+Simple examination of local network with accompanying DataFrame:
 ```bash
 from tech_tools import local_devices
 
@@ -101,7 +101,55 @@ print(sniffed_mac_addresses)
 2   90:09:D0:22:41:DE          Synology Incorporated
 ```
 
-## DISCLAIMER
+#### Standalone Operation
+---
+The built-in script called by `quick_start()`, provides an automated means to utilize the basic functionality of this package.
+```bash
+from tech_tools import quick_start
+
+quick_start()
+```
+
+```bash
+MAIN MENU
+
+Please select from the following options: 
+ 1 Probe Local Devices 
+ 2 TCP Port Scanner 
+ 3 Wireshark Analysis
+ 4 Display Interfaces
+ 5 Ping IP Range
+ 6 Quit
+```
+
+
+Using `PyInstaller`, it is possible to run this script as a program without the need to install Python on the OS.
+Each executable must be created on the OS for which it is expected to operate.  This project provides a release for Windows. See releases on GitHub.
+
+
+##### Create File
+(script.py)
+```bash
+from tech_tools import quick_start
+
+quick_start()
+
+# Additional code if desired
+
+done = input("Press Enter to Close")
+```
+
+##### Create Standalone Executable
+```bash
+cd /path/to/script.py
+
+pyinstaller -c --collect-data tech_tools --onefile script.py
+```
+
+Please see `PyInstaller` for more detailed instructions.  Your system and/or use case might require different criteria.
+
+
+# DISCLAIMER
 **This project is in no way affiliated with Wireshark or any of its related services and packages. Any usage of that product is subject to its terms of use.**  
 
 **Once again, do not use `tech-tools` or any other networking tool unless you have received permission to do so.  
