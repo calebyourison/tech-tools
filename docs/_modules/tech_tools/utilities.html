@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>tech_tools.utilities &mdash; tech-tools 0.3 documentation</title>
+  <title>tech_tools.utilities &mdash; tech-tools 0.4 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=b489f392"></script>
+      <script src="../../_static/documentation_options.js?v=7f00635f"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -72,6 +72,8 @@
 <span></span><span class="kn">import</span> <span class="nn">socket</span>
 <span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">from</span> <span class="nn">ipaddress</span> <span class="kn">import</span> <span class="n">IPv4Address</span><span class="p">,</span> <span class="n">IPv4Network</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">time</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
@@ -100,18 +102,22 @@
 <span class="sd">        highly recommended to supply an address, subnet, and gateway.  Omission of this information could prevent a</span>
 <span class="sd">        valid socket attempt and default to the fallback interface depending on a few factors.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ip</span> <span class="o">=</span> <span class="s2">&quot;127.0.0.1&quot;</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_DGRAM</span><span class="p">)</span>
     <span class="n">s</span><span class="o">.</span><span class="n">settimeout</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
     <span class="k">try</span><span class="p">:</span>
-        <span class="c1"># This connection does not need reach destination in order to be successful</span>
+        <span class="c1"># This connection does not need reach destination in order return interface IP Address</span>
         <span class="n">s</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span class="s2">&quot;10.254.254.254&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-        <span class="n">ip</span> <span class="o">=</span> <span class="n">IPv4Address</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">getsockname</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">ip</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">getsockname</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+
     <span class="c1"># Fallback to loopback address, notify user</span>
     <span class="k">except</span> <span class="p">(</span><span class="ne">PermissionError</span><span class="p">,</span> <span class="ne">ConnectionRefusedError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">):</span>
-        <span class="n">ip</span> <span class="o">=</span> <span class="s2">&quot;127.0.0.1&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unable to determine local address: defaulting to loopback interface&quot;</span><span class="p">)</span>
-    <span class="k">finally</span><span class="p">:</span>
-        <span class="n">s</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="n">s</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="n">ip</span> <span class="o">=</span> <span class="n">IPv4Address</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">ip</span></div>
 
 
@@ -246,9 +252,9 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="n">soc</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span class="nb">str</span><span class="p">(</span><span class="n">host</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">port</span><span class="p">)))</span>
         <span class="n">soc</span><span class="o">.</span><span class="n">shutdown</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">SHUT_RDWR</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">host</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">IPv4Address</span><span class="p">(</span><span class="n">host</span><span class="p">)</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="c1"># Prevent duplicate port listings in the event of multiple attempts</span>
-            <span class="k">if</span> <span class="n">port</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">output</span><span class="p">[</span><span class="n">host</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">port</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">output</span><span class="p">[</span><span class="n">IPv4Address</span><span class="p">(</span><span class="n">host</span><span class="p">)]:</span>
                 <span class="n">output</span><span class="p">[</span><span class="n">IPv4Address</span><span class="p">(</span><span class="n">host</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">port</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">output</span><span class="p">[</span><span class="n">IPv4Address</span><span class="p">(</span><span class="n">host</span><span class="p">)]</span> <span class="o">=</span> <span class="p">[</span><span class="n">port</span><span class="p">]</span>
@@ -256,15 +262,14 @@
     <span class="k">except</span> <span class="p">(</span><span class="ne">TimeoutError</span><span class="p">,</span> <span class="ne">ConnectionRefusedError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">):</span>
         <span class="k">pass</span>
 
-    <span class="k">finally</span><span class="p">:</span>
-        <span class="n">soc</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+    <span class="n">soc</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
 
 <div class="viewcode-block" id="tcp_ip_port_scanner">
 <a class="viewcode-back" href="../../tech_tools.html#tech_tools.utilities.tcp_ip_port_scanner">[docs]</a>
 <span class="k">def</span> <span class="nf">tcp_ip_port_scanner</span><span class="p">(</span>
-    <span class="n">ip_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="n">IPv4Address</span><span class="p">],</span> <span class="n">ports</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">df</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">ip_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="n">IPv4Address</span><span class="p">],</span> <span class="n">ports</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">df</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">IPv4Address</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">|</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine which hosts from a given list are reachable via a port or list of ports, return dictionary or DataFrame</span>
 <span class="sd">    of valid connections.</span>
@@ -275,6 +280,8 @@
 <span class="sd">    :type ports: int, list</span>
 <span class="sd">    :param df: (optional) This entry will determine what format is returned, True by default and therefore a DataFrame.</span>
 <span class="sd">    :type df: bool</span>
+<span class="sd">    :param timeout: (optional) Number of seconds to wait for a timeout failure, default 4</span>
+<span class="sd">    :type timeout: int</span>
 
 <span class="sd">    :return: Hosts with associated ports on which they responded</span>
 <span class="sd">    :rtype: dict, pd.DataFrame</span>
@@ -301,7 +308,7 @@
     <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">ip_list</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="n">port_list</span><span class="p">:</span>
             <span class="n">t</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
-                <span class="n">target</span><span class="o">=</span><span class="n">reachable_tcp_single_ip</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+                <span class="n">target</span><span class="o">=</span><span class="n">reachable_tcp_single_ip</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span>
             <span class="p">)</span>
             <span class="n">threads_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
 
@@ -322,6 +329,50 @@
         <span class="n">final_output</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">pre_df_dictionary</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">final_output</span></div>
+
+
+<div class="viewcode-block" id="tcp_ip_port_monitor">
+<a class="viewcode-back" href="../../tech_tools.html#tech_tools.utilities.tcp_ip_port_monitor">[docs]</a>
+<span class="k">def</span> <span class="nf">tcp_ip_port_monitor</span><span class="p">(</span>
+        <span class="n">ip_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="n">IPv4Address</span><span class="p">],</span> <span class="n">ports</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">frequency</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">int</span><span class="o">|</span><span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine which hosts are reachable via a list of ports for a given duration (or indefinitely) at a given frequency and display the results</span>
+
+<span class="sd">    :param ip_list: Containing either str ip &quot;10.10.1.1&quot; or IPv4Address(&quot;10.10.1.1&quot;) objects</span>
+<span class="sd">    :type ip_list: list</span>
+<span class="sd">    :param ports: Either a single int port or list of int ports</span>
+<span class="sd">    :type ports: int, list</span>
+<span class="sd">    :param frequency: (optional) Seconds to wait between batch scans, default 10</span>
+<span class="sd">    :type frequency: int</span>
+<span class="sd">    :param duration: (optional) Total seconds to run the monitor function (None by default for indefinitely)</span>
+<span class="sd">    :type duration: int, None</span>
+<span class="sd">    :param timeout: (optional) Seconds to wait for unresponsive host, default 2</span>
+<span class="sd">    :type timeout: int</span>
+
+<span class="sd">    :return: Nothing, print results to output</span>
+<span class="sd">    :rtype: None</span>
+<span class="sd">     &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">duration</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Scanning every </span><span class="si">{</span><span class="n">frequency</span><span class="si">}</span><span class="s1"> second(s) for a duration of </span><span class="si">{</span><span class="n">duration</span><span class="si">}</span><span class="s1"> second(s):</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">end_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">duration</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">end_time</span><span class="p">:</span>
+            <span class="n">responses</span> <span class="o">=</span> <span class="n">tcp_ip_port_scanner</span><span class="p">(</span><span class="n">ip_list</span><span class="p">,</span> <span class="n">ports</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Responding Hosts: [ports]</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">host</span><span class="p">,</span> <span class="n">ports</span> <span class="ow">in</span> <span class="n">responses</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">ports</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">frequency</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Scanning every </span><span class="si">{</span><span class="n">frequency</span><span class="si">}</span><span class="s1"> second(s), please use keyboard interrupt to exit</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">responses</span> <span class="o">=</span> <span class="n">tcp_ip_port_scanner</span><span class="p">(</span><span class="n">ip_list</span><span class="p">,</span> <span class="n">ports</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Responding Hosts: [ports]</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">host</span><span class="p">,</span> <span class="n">ports</span> <span class="ow">in</span> <span class="n">responses</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">ports</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">frequency</span><span class="p">)</span></div>
 
 </pre></div>
 

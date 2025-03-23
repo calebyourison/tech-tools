@@ -82,7 +82,7 @@
           "ip.checksum.status": "2",
           "ip.src": "10.172.1.13",
           "ip.addr": "10.172.1.13",
-          "ip.src_host": "10.172.1.13",
+          "ip.src_host": "invalid address",
           "ip.host": "10.172.1.13",
           "ip.dst": "239.255.255.250",
           "ip.addr": "239.255.255.250",

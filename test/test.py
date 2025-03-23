@@ -1,4 +1,6 @@
 import unittest
+from unittest.mock import patch
+from io import StringIO
 from ipaddress import IPv4Address
 
 import pandas as pd
@@ -9,6 +11,7 @@ from tech_tools.utilities import (
     generate_range_from_two_ips,
     reachable_tcp_single_ip,
     tcp_ip_port_scanner,
+    tcp_ip_port_monitor,
 )
 
 from tech_tools.cli import (
@@ -18,6 +21,7 @@ from tech_tools.cli import (
     parse_local_arp,
     ping_single_ip,
     ping_range_ip,
+    ping_monitor,
     trace_route,
     parse_trace_route_local,
 )
@@ -114,6 +118,14 @@ class TestCLIFunctions(unittest.TestCase):
         for ip in invalid_hosts:
             self.assertTrue(IPv4Address(ip) not in valid_pings)
 
+
+    def test_ping_monitor(self):
+        """Test function to assert ping monitor operates correctly"""
+        # Assumes google will respond to a ping
+        with patch('sys.stdout', new=StringIO()) as mock_output:
+            ping_monitor(['8.8.8.8'], duration=1, frequency=1)
+            self.assertTrue('8.8.8.8' in mock_output.getvalue())
+
     def test_trace_route(self):
         """Test Function to assert trace_route operates correctly"""
         trace_route_output = trace_route()
@@ -171,8 +183,8 @@ class TestUtilityFunctions(unittest.TestCase):
 
     def test_generate_range_from_two_ips(self):
         """Test function to assert generate_range_from_two_ips operates correctly"""
-        a = "192.168.0.0"
-        b = "192.168.0.255"
+        a = "192.168.0.255"
+        b = "192.168.0.0"
 
         simple_full_subnet = generate_range_from_two_ips(a, b)
 
@@ -197,9 +209,13 @@ class TestUtilityFunctions(unittest.TestCase):
         """Test function to assert reachable_tcp_single_ip operates correctly"""
         my_host_dict = {}
         # Google, if internet is not available this test will fail
-        reachable_tcp_single_ip(google_dns, 53, my_host_dict)
+        reachable_tcp_single_ip(google_dns, 53, my_host_dict, timeout=2)
         self.assertTrue(IPv4Address(google_dns) in my_host_dict.keys())
         self.assertTrue(53 in my_host_dict[IPv4Address(google_dns)])
+
+        reachable_tcp_single_ip(google_dns, 443, my_host_dict, timeout=2)
+        self.assertTrue(IPv4Address(google_dns) in my_host_dict.keys())
+        self.assertTrue(443 in my_host_dict[IPv4Address(google_dns)])
 
     def test_ip_port_scanner(self):
         """Test function to assert ip_port_scanner operates correctly"""
@@ -243,6 +259,14 @@ class TestUtilityFunctions(unittest.TestCase):
             self.assertEqual(1, df.shape[0])
             self.assertTrue(IPv4Address(google_dns) in df["ip"].tolist())
             self.assertTrue(53 in df["ports"].tolist()[0])
+
+    def test_tcp_ip_port_monitor(self):
+        """Test function to assert tcp_ip_port_monitor operates correctly"""
+        # Assumes google will respond on ports
+        with patch('sys.stdout', new=StringIO()) as mock_output:
+            tcp_ip_port_monitor(['8.8.8.8'], [53, 443], duration=1, frequency=1)
+            self.assertTrue('8.8.8.8' in mock_output.getvalue())
+            self.assertTrue('[53, 443]' in mock_output.getvalue())
 
 
 class TestWiresharkFunctions(unittest.TestCase):

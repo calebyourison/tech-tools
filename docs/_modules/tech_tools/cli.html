@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>tech_tools.cli &mdash; tech-tools 0.3 documentation</title>
+  <title>tech_tools.cli &mdash; tech-tools 0.4 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=b489f392"></script>
+      <script src="../../_static/documentation_options.js?v=7f00635f"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -73,6 +73,8 @@
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">from</span> <span class="nn">ipaddress</span> <span class="kn">import</span> <span class="n">IPv4Address</span><span class="p">,</span> <span class="n">AddressValueError</span>
 <span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">time</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
@@ -83,7 +85,7 @@
 <span class="k">def</span> <span class="nf">ipconfig</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return string of raw ip configuration info from CLI.</span>
 
-<span class="sd">    :return: Printout of ipconifg /all on Windows or nmcli device show on linux</span>
+<span class="sd">    :return: Printout of ipconfig /all on Windows or nmcli device show on linux</span>
 <span class="sd">    :rtype: str</span>
 
 <span class="sd">    Note:</span>
@@ -260,13 +262,15 @@
 <span class="c1"># Ping</span>
 <div class="viewcode-block" id="ping_single_ip">
 <a class="viewcode-back" href="../../tech_tools.html#tech_tools.cli.ping_single_ip">[docs]</a>
-<span class="k">def</span> <span class="nf">ping_single_ip</span><span class="p">(</span><span class="n">ip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">IPv4Address</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">IPv4Address</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">ping_single_ip</span><span class="p">(</span><span class="n">ip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">IPv4Address</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">IPv4Address</span><span class="p">],</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Ping a single host and append to output list if successful.</span>
 
 <span class="sd">    :param ip: A valid IPv4 Address, example &quot;10.10.10.132&quot;</span>
 <span class="sd">    :type ip: str, IPv4Address</span>
 <span class="sd">    :param output: List to update with values</span>
 <span class="sd">    :type output: list</span>
+<span class="sd">    :param timeout: (optional) Seconds to wait for unresponsive host, default 2</span>
+<span class="sd">    :type timeout: int</span>
 
 <span class="sd">    :return: Nothing, external list will be updated</span>
 <span class="sd">    :rtype: None</span>
@@ -275,12 +279,14 @@
 
     <span class="c1"># Convert to string if not already</span>
     <span class="n">ip</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span>
+    <span class="c1"># Windows timeout in ms</span>
+    <span class="n">windows_timeout</span> <span class="o">=</span> <span class="n">timeout</span> <span class="o">*</span> <span class="mi">1000</span>
     <span class="c1"># Default to windows command</span>
-    <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ping&quot;</span><span class="p">,</span> <span class="n">ip</span><span class="p">]</span>
+    <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ping&quot;</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="s1">&#39;/w&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">windows_timeout</span><span class="p">)]</span>
 
     <span class="c1"># Note the linux ping command requires additional flag to prevent an unending process</span>
     <span class="k">if</span> <span class="n">operating_system</span> <span class="o">==</span> <span class="s2">&quot;linux&quot;</span><span class="p">:</span>
-        <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ping&quot;</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="s2">&quot;-c&quot;</span><span class="p">,</span> <span class="s2">&quot;4&quot;</span><span class="p">]</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ping&quot;</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="s2">&quot;-c&quot;</span><span class="p">,</span> <span class="s2">&quot;4&quot;</span><span class="p">,</span> <span class="s1">&#39;-W&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">timeout</span><span class="p">)]</span>
 
     <span class="n">ping</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -292,11 +298,13 @@
 
 <div class="viewcode-block" id="ping_range_ip">
 <a class="viewcode-back" href="../../tech_tools.html#tech_tools.cli.ping_range_ip">[docs]</a>
-<span class="k">def</span> <span class="nf">ping_range_ip</span><span class="p">(</span><span class="n">ip_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="n">IPv4Address</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IPv4Address</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">ping_range_ip</span><span class="p">(</span><span class="n">ip_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="n">IPv4Address</span><span class="p">],</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IPv4Address</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Ping a list of hosts and return list of hosts that produced a valid response.</span>
 
 <span class="sd">    :param ip_list: Containing either str or IPv4Address objects of hosts</span>
 <span class="sd">    :type ip_list: list</span>
+<span class="sd">    :param timeout: (optional) Seconds to wait for unresponsive host, default 2</span>
+<span class="sd">    :type timeout: int</span>
 
 <span class="sd">    :return: IPv4Address objects that responded to a ping</span>
 <span class="sd">    :rtype: list</span>
@@ -307,7 +315,7 @@
     <span class="c1"># Create separate thread for each host to expedite the process</span>
     <span class="c1"># Most of the time in this function is consumed by waiting for a host response</span>
     <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">ip_list</span><span class="p">:</span>
-        <span class="n">t</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">ping_single_ip</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">output</span><span class="p">))</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">ping_single_ip</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">timeout</span><span class="p">))</span>
         <span class="n">threads_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">threads_list</span><span class="p">)):</span>
@@ -318,6 +326,46 @@
 
     <span class="c1"># Sort the output to keep addresses in a user-friendly order</span>
     <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">output</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="ping_monitor">
+<a class="viewcode-back" href="../../tech_tools.html#tech_tools.cli.ping_monitor">[docs]</a>
+<span class="k">def</span> <span class="nf">ping_monitor</span><span class="p">(</span><span class="n">ip_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="o">|</span><span class="n">IPv4Address</span><span class="p">],</span> <span class="n">frequency</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Ping a list of hosts for given duration (or indefinitely) at a given frequency and display responsive hosts.</span>
+
+<span class="sd">    :param ip_list: Containing either str or IPv4Address objects of hosts</span>
+<span class="sd">    :type ip_list: list</span>
+<span class="sd">    :param frequency: (optional) Seconds to wait between batch pings, default 10</span>
+<span class="sd">    :type frequency: int</span>
+<span class="sd">    :param duration: (optional) Total seconds to run the monitor function (None by default for indefinitely)</span>
+<span class="sd">    :type duration: int, None</span>
+<span class="sd">    :param timeout: (optional) Seconds to wait for unresponsive host, default 2</span>
+<span class="sd">    :type timeout: int</span>
+
+<span class="sd">    :return: Nothing, print results to output</span>
+<span class="sd">    :rtype: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">duration</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Pinging every </span><span class="si">{</span><span class="n">frequency</span><span class="si">}</span><span class="s1"> second(s) for a duration of </span><span class="si">{</span><span class="n">duration</span><span class="si">}</span><span class="s1"> second(s):</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">end_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">duration</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">end_time</span><span class="p">:</span>
+            <span class="n">responses</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span> <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">ping_range_ip</span><span class="p">(</span><span class="n">ip_list</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Responding Hosts:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">host</span> <span class="ow">in</span> <span class="n">responses</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">frequency</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Pinging every </span><span class="si">{</span><span class="n">frequency</span><span class="si">}</span><span class="s1"> second(s), please use keyboard interrupt to exit&#39;</span><span class="p">)</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">responses</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span> <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">ping_range_ip</span><span class="p">(</span><span class="n">ip_list</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Responding Hosts:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">host</span> <span class="ow">in</span> <span class="n">responses</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">frequency</span><span class="p">)</span></div>
 
 
 

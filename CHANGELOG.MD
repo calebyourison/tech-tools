@@ -12,4 +12,14 @@
 
 -Addition of `quick_start()`, a function that provides automated access to some of the basic package functions.
 
--Addition of type hints matching docstrings
+-Addition of type hints matching docstrings.
+
+#### 0.4
+---
+-Bug fix `reachable_tcp_single_ip()` where a host provided as str would overwrite existing entry due to mismatched IPv4Address type.
+
+-Modified `ping_single_ip()`, `ping_range_ip()`, and `tcp_ip_port_scanner()` to accept additional timeout parameter (No Breaking Changes).
+
+-Addition of `ping_monitor()`, a function that prints a list of ping responsive hosts at a given frequency.
+
+-Addition of `tcp_ip_port_monitor()` similar to ping monitor; prints a list of hosts with valid responses on a list of ports.

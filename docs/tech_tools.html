@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>tech_tools package &mdash; tech-tools 0.3 documentation</title>
+  <title>tech_tools package &mdash; tech-tools 0.4 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=b489f392"></script>
+      <script src="_static/documentation_options.js?v=7f00635f"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -52,6 +52,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#tech_tools.cli.parse_ipconfig"><code class="docutils literal notranslate"><span class="pre">parse_ipconfig()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#tech_tools.cli.parse_local_arp"><code class="docutils literal notranslate"><span class="pre">parse_local_arp()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#tech_tools.cli.parse_trace_route_local"><code class="docutils literal notranslate"><span class="pre">parse_trace_route_local()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tech_tools.cli.ping_monitor"><code class="docutils literal notranslate"><span class="pre">ping_monitor()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#tech_tools.cli.ping_range_ip"><code class="docutils literal notranslate"><span class="pre">ping_range_ip()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#tech_tools.cli.ping_single_ip"><code class="docutils literal notranslate"><span class="pre">ping_single_ip()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#tech_tools.cli.trace_route"><code class="docutils literal notranslate"><span class="pre">trace_route()</span></code></a></li>
@@ -75,6 +76,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#tech_tools.utilities.generate_range_from_two_ips"><code class="docutils literal notranslate"><span class="pre">generate_range_from_two_ips()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#tech_tools.utilities.local_ip"><code class="docutils literal notranslate"><span class="pre">local_ip()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#tech_tools.utilities.reachable_tcp_single_ip"><code class="docutils literal notranslate"><span class="pre">reachable_tcp_single_ip()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tech_tools.utilities.tcp_ip_port_monitor"><code class="docutils literal notranslate"><span class="pre">tcp_ip_port_monitor()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#tech_tools.utilities.tcp_ip_port_scanner"><code class="docutils literal notranslate"><span class="pre">tcp_ip_port_scanner()</span></code></a></li>
 </ul>
 </li>
@@ -129,7 +131,7 @@
 <dd><p>Return string of raw ip configuration info from CLI.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Printout of ipconifg /all on Windows or nmcli device show on linux</p>
+<dd class="field-odd"><p>Printout of ipconfig /all on Windows or nmcli device show on linux</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>str</p>
@@ -207,12 +209,37 @@ columns: ip, mac</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="tech_tools.cli.ping_monitor">
+<span class="sig-prename descclassname"><span class="pre">tech_tools.cli.</span></span><span class="sig-name descname"><span class="pre">ping_monitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">IPv4Address</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/tech_tools/cli.html#ping_monitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tech_tools.cli.ping_monitor" title="Link to this definition"></a></dt>
+<dd><p>Ping a list of hosts for given duration (or indefinitely) at a given frequency and display responsive hosts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ip_list</strong> (<em>list</em>) – Containing either str or IPv4Address objects of hosts</p></li>
+<li><p><strong>frequency</strong> (<em>int</em>) – (optional) Seconds to wait between batch pings, default 10</p></li>
+<li><p><strong>duration</strong> (<em>int</em><em>, </em><em>None</em>) – (optional) Total seconds to run the monitor function (None by default for indefinitely)</p></li>
+<li><p><strong>timeout</strong> (<em>int</em>) – (optional) Seconds to wait for unresponsive host, default 2</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing, print results to output</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="tech_tools.cli.ping_range_ip">
-<span class="sig-prename descclassname"><span class="pre">tech_tools.cli.</span></span><span class="sig-name descname"><span class="pre">ping_range_ip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">IPv4Address</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">IPv4Address</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tech_tools/cli.html#ping_range_ip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tech_tools.cli.ping_range_ip" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">tech_tools.cli.</span></span><span class="sig-name descname"><span class="pre">ping_range_ip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">IPv4Address</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">IPv4Address</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tech_tools/cli.html#ping_range_ip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tech_tools.cli.ping_range_ip" title="Link to this definition"></a></dt>
 <dd><p>Ping a list of hosts and return list of hosts that produced a valid response.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ip_list</strong> (<em>list</em>) – Containing either str or IPv4Address objects of hosts</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ip_list</strong> (<em>list</em>) – Containing either str or IPv4Address objects of hosts</p></li>
+<li><p><strong>timeout</strong> (<em>int</em>) – (optional) Seconds to wait for unresponsive host, default 2</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>IPv4Address objects that responded to a ping</p>
@@ -225,13 +252,14 @@ columns: ip, mac</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="tech_tools.cli.ping_single_ip">
-<span class="sig-prename descclassname"><span class="pre">tech_tools.cli.</span></span><span class="sig-name descname"><span class="pre">ping_single_ip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">IPv4Address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">IPv4Address</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/tech_tools/cli.html#ping_single_ip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tech_tools.cli.ping_single_ip" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">tech_tools.cli.</span></span><span class="sig-name descname"><span class="pre">ping_single_ip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">IPv4Address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">IPv4Address</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/tech_tools/cli.html#ping_single_ip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tech_tools.cli.ping_single_ip" title="Link to this definition"></a></dt>
 <dd><p>Ping a single host and append to output list if successful.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ip</strong> (<em>str</em><em>, </em><em>IPv4Address</em>) – A valid IPv4 Address, example “10.10.10.132”</p></li>
 <li><p><strong>output</strong> (<em>list</em>) – List to update with values</p></li>
+<li><p><strong>timeout</strong> (<em>int</em>) – (optional) Seconds to wait for unresponsive host, default 2</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -490,8 +518,31 @@ However, if the port in question already exists within said list, it will not be
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="tech_tools.utilities.tcp_ip_port_monitor">
+<span class="sig-prename descclassname"><span class="pre">tech_tools.utilities.</span></span><span class="sig-name descname"><span class="pre">tcp_ip_port_monitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">IPv4Address</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/tech_tools/utilities.html#tcp_ip_port_monitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tech_tools.utilities.tcp_ip_port_monitor" title="Link to this definition"></a></dt>
+<dd><p>Determine which hosts are reachable via a list of ports for a given duration (or indefinitely) at a given frequency and display the results</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ip_list</strong> (<em>list</em>) – Containing either str ip “10.10.1.1” or IPv4Address(“10.10.1.1”) objects</p></li>
+<li><p><strong>ports</strong> (<em>int</em><em>, </em><em>list</em>) – Either a single int port or list of int ports</p></li>
+<li><p><strong>frequency</strong> (<em>int</em>) – (optional) Seconds to wait between batch scans, default 10</p></li>
+<li><p><strong>duration</strong> (<em>int</em><em>, </em><em>None</em>) – (optional) Total seconds to run the monitor function (None by default for indefinitely)</p></li>
+<li><p><strong>timeout</strong> (<em>int</em>) – (optional) Seconds to wait for unresponsive host, default 2</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing, print results to output</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="tech_tools.utilities.tcp_ip_port_scanner">
-<span class="sig-prename descclassname"><span class="pre">tech_tools.utilities.</span></span><span class="sig-name descname"><span class="pre">tcp_ip_port_scanner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">IPv4Address</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">IPv4Address</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/tech_tools/utilities.html#tcp_ip_port_scanner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tech_tools.utilities.tcp_ip_port_scanner" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">tech_tools.utilities.</span></span><span class="sig-name descname"><span class="pre">tcp_ip_port_scanner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">IPv4Address</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">IPv4Address</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/tech_tools/utilities.html#tcp_ip_port_scanner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tech_tools.utilities.tcp_ip_port_scanner" title="Link to this definition"></a></dt>
 <dd><p>Determine which hosts from a given list are reachable via a port or list of ports, return dictionary or DataFrame
 of valid connections.</p>
 <dl class="field-list simple">
@@ -500,6 +551,7 @@ of valid connections.</p>
 <li><p><strong>ip_list</strong> (<em>list</em>) – Containing either str ip “10.10.1.1” or IPv4Address(“10.10.1.1”) objects</p></li>
 <li><p><strong>ports</strong> (<em>int</em><em>, </em><em>list</em>) – Either a single int port or list of int ports</p></li>
 <li><p><strong>df</strong> (<em>bool</em>) – (optional) This entry will determine what format is returned, True by default and therefore a DataFrame.</p></li>
+<li><p><strong>timeout</strong> (<em>int</em>) – (optional) Number of seconds to wait for a timeout failure, default 4</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

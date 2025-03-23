@@ -10,7 +10,7 @@ mypkg = ["*.txt", "*.json"]
 
 [project]
 name = "tech-tools"
-version = "0.3"
+version = "0.4"
 dependencies = [
     "pandas>=2.0.0",
 ]

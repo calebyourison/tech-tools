@@ -2,6 +2,8 @@ import platform
 import subprocess
 from ipaddress import IPv4Address, AddressValueError
 import threading
+import datetime
+import time
 
 import pandas as pd
 
@@ -10,7 +12,7 @@ import pandas as pd
 def ipconfig() -> str:
     """Return string of raw ip configuration info from CLI.
 
-    :return: Printout of ipconifg /all on Windows or nmcli device show on linux
+    :return: Printout of ipconfig /all on Windows or nmcli device show on linux
     :rtype: str
 
     Note:
@@ -175,13 +177,15 @@ def parse_local_arp() -> pd.DataFrame:
 
 
 # Ping
-def ping_single_ip(ip: str | IPv4Address, output: list[IPv4Address]) -> None:
+def ping_single_ip(ip: str | IPv4Address, output: list[IPv4Address], timeout: int = 2) -> None:
     """Ping a single host and append to output list if successful.
 
     :param ip: A valid IPv4 Address, example "10.10.10.132"
     :type ip: str, IPv4Address
     :param output: List to update with values
     :type output: list
+    :param timeout: (optional) Seconds to wait for unresponsive host, default 2
+    :type timeout: int
 
     :return: Nothing, external list will be updated
     :rtype: None
@@ -190,12 +194,14 @@ def ping_single_ip(ip: str | IPv4Address, output: list[IPv4Address]) -> None:
 
     # Convert to string if not already
     ip = str(ip)
+    # Windows timeout in ms
+    windows_timeout = timeout * 1000
     # Default to windows command
-    command = ["ping", ip]
+    command = ["ping", ip, '/w', str(windows_timeout)]
 
     # Note the linux ping command requires additional flag to prevent an unending process
     if operating_system == "linux":
-        command = ["ping", ip, "-c", "4"]
+        command = ["ping", ip, "-c", "4", '-W', str(timeout)]
 
     ping = subprocess.run(command, capture_output=True, text=True)
 
@@ -204,11 +210,13 @@ def ping_single_ip(ip: str | IPv4Address, output: list[IPv4Address]) -> None:
         output.append(IPv4Address(ip))
 
 
-def ping_range_ip(ip_list: list[str | IPv4Address]) -> list[IPv4Address]:
+def ping_range_ip(ip_list: list[str | IPv4Address], timeout: int = 2) -> list[IPv4Address]:
     """Ping a list of hosts and return list of hosts that produced a valid response.
 
     :param ip_list: Containing either str or IPv4Address objects of hosts
     :type ip_list: list
+    :param timeout: (optional) Seconds to wait for unresponsive host, default 2
+    :type timeout: int
 
     :return: IPv4Address objects that responded to a ping
     :rtype: list
@@ -219,7 +227,7 @@ def ping_range_ip(ip_list: list[str | IPv4Address]) -> list[IPv4Address]:
     # Create separate thread for each host to expedite the process
     # Most of the time in this function is consumed by waiting for a host response
     for ip in ip_list:
-        t = threading.Thread(target=ping_single_ip, args=(ip, output))
+        t = threading.Thread(target=ping_single_ip, args=(ip, output, timeout))
         threads_list.append(t)
 
     for number in range(len(threads_list)):
@@ -230,6 +238,43 @@ def ping_range_ip(ip_list: list[str | IPv4Address]) -> list[IPv4Address]:
 
     # Sort the output to keep addresses in a user-friendly order
     return sorted(output)
+
+
+def ping_monitor(ip_list: list[str|IPv4Address], frequency: int = 10, duration: int | None = None, timeout: int = 2) -> None:
+    """Ping a list of hosts for given duration (or indefinitely) at a given frequency and display responsive hosts.
+
+    :param ip_list: Containing either str or IPv4Address objects of hosts
+    :type ip_list: list
+    :param frequency: (optional) Seconds to wait between batch pings, default 10
+    :type frequency: int
+    :param duration: (optional) Total seconds to run the monitor function (None by default for indefinitely)
+    :type duration: int, None
+    :param timeout: (optional) Seconds to wait for unresponsive host, default 2
+    :type timeout: int
+
+    :return: Nothing, print results to output
+    :rtype: None
+    """
+    if duration is not None:
+        print(f'Pinging every {frequency} second(s) for a duration of {duration} second(s):\n')
+        end_time = datetime.datetime.now() + datetime.timedelta(seconds=duration)
+        while datetime.datetime.now() < end_time:
+            responses = [str(ip) for ip in ping_range_ip(ip_list, timeout)]
+            print("Responding Hosts:\n")
+            for host in responses:
+                print(host)
+            print('\n')
+            time.sleep(frequency)
+
+    else:
+        print(f'Pinging every {frequency} second(s), please use keyboard interrupt to exit')
+        while True:
+            responses = [str(ip) for ip in ping_range_ip(ip_list, timeout)]
+            print("Responding Hosts:\n")
+            for host in responses:
+                print(host)
+            print('\n')
+            time.sleep(frequency)
 
 
 # Trace Route

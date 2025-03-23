@@ -1,6 +1,8 @@
 import socket
 import threading
 from ipaddress import IPv4Address, IPv4Network
+import datetime
+import time
 
 import pandas as pd
 
@@ -27,18 +29,22 @@ def local_ip() -> IPv4Address:
         highly recommended to supply an address, subnet, and gateway.  Omission of this information could prevent a
         valid socket attempt and default to the fallback interface depending on a few factors.
     """
+    ip = "127.0.0.1"
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.settimeout(0)
+
     try:
-        # This connection does not need reach destination in order to be successful
+        # This connection does not need reach destination in order return interface IP Address
         s.connect(("10.254.254.254", 1))
-        ip = IPv4Address(s.getsockname()[0])
+        ip = s.getsockname()[0]
+
     # Fallback to loopback address, notify user
     except (PermissionError, ConnectionRefusedError, OSError):
-        ip = "127.0.0.1"
         print("Unable to determine local address: defaulting to loopback interface")
-    finally:
-        s.close()
+
+    s.close()
+
+    ip = IPv4Address(ip)
     return ip
 
 
@@ -164,9 +170,9 @@ def reachable_tcp_single_ip(
     try:
         soc.connect((str(host), int(port)))
         soc.shutdown(socket.SHUT_RDWR)
-        if host in output.keys():
+        if IPv4Address(host) in output.keys():
             # Prevent duplicate port listings in the event of multiple attempts
-            if port not in output[host]:
+            if port not in output[IPv4Address(host)]:
                 output[IPv4Address(host)].append(port)
         else:
             output[IPv4Address(host)] = [port]
@@ -174,12 +180,11 @@ def reachable_tcp_single_ip(
     except (TimeoutError, ConnectionRefusedError, OSError):
         pass
 
-    finally:
-        soc.close()
+    soc.close()
 
 
 def tcp_ip_port_scanner(
-    ip_list: list[str | IPv4Address], ports: int | list[int], df: bool = True
+    ip_list: list[str | IPv4Address], ports: int | list[int], df: bool = True, timeout: int = 4
 ) -> dict[IPv4Address, list[int]] | pd.DataFrame:
     """Determine which hosts from a given list are reachable via a port or list of ports, return dictionary or DataFrame
     of valid connections.
@@ -190,6 +195,8 @@ def tcp_ip_port_scanner(
     :type ports: int, list
     :param df: (optional) This entry will determine what format is returned, True by default and therefore a DataFrame.
     :type df: bool
+    :param timeout: (optional) Number of seconds to wait for a timeout failure, default 4
+    :type timeout: int
 
     :return: Hosts with associated ports on which they responded
     :rtype: dict, pd.DataFrame
@@ -216,7 +223,7 @@ def tcp_ip_port_scanner(
     for ip in ip_list:
         for port in port_list:
             t = threading.Thread(
-                target=reachable_tcp_single_ip, args=(ip, port, output)
+                target=reachable_tcp_single_ip, args=(ip, port, output, timeout)
             )
             threads_list.append(t)
 
@@ -237,3 +244,44 @@ def tcp_ip_port_scanner(
         final_output = pd.DataFrame.from_dict(pre_df_dictionary)
 
     return final_output
+
+def tcp_ip_port_monitor(
+        ip_list: list[str | IPv4Address], ports: int | list[int], frequency: int = 10, duration: int|None = None, timeout: int = 4
+) -> None:
+    """Determine which hosts are reachable via a list of ports for a given duration (or indefinitely) at a given frequency and display the results
+
+    :param ip_list: Containing either str ip "10.10.1.1" or IPv4Address("10.10.1.1") objects
+    :type ip_list: list
+    :param ports: Either a single int port or list of int ports
+    :type ports: int, list
+    :param frequency: (optional) Seconds to wait between batch scans, default 10
+    :type frequency: int
+    :param duration: (optional) Total seconds to run the monitor function (None by default for indefinitely)
+    :type duration: int, None
+    :param timeout: (optional) Seconds to wait for unresponsive host, default 2
+    :type timeout: int
+
+    :return: Nothing, print results to output
+    :rtype: None
+     """
+
+    if duration is not None:
+        print(f'Scanning every {frequency} second(s) for a duration of {duration} second(s):\n')
+        end_time = datetime.datetime.now() + datetime.timedelta(seconds=duration)
+        while datetime.datetime.now() < end_time:
+            responses = tcp_ip_port_scanner(ip_list, ports, timeout=timeout, df=False)
+            print('Responding Hosts: [ports]\n')
+            for host, ports in responses.items():
+                print(host, ':', ports)
+            print('\n')
+            time.sleep(frequency)
+
+    else:
+        print(f'Scanning every {frequency} second(s), please use keyboard interrupt to exit\n')
+        while True:
+            responses = tcp_ip_port_scanner(ip_list, ports, timeout=timeout, df=False)
+            print('Responding Hosts: [ports]\n')
+            for host, ports in responses.items():
+                print(host, ':', ports)
+            print('\n')
+            time.sleep(frequency)
